@@ -20,6 +20,14 @@ jobs:
           echo "BRANCH_NAME=$(echo ${GITHUB_REF_NAME} | sed 's/[^[:alnum:]\.\_\-]/-/g')" >> "$GITHUB_OUTPUT";
           echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT";
 
+      - name: Extract release version
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: taccwma/apcd-cms
+        tags: |
+          type=semver,pattern=v{{version}}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -34,4 +42,4 @@ jobs:
         with:
           context: apcd_cms
           push: true
-          tags: taccwma/apcd-cms:${{ steps.vars.outputs.SHORT_SHA }},taccwma/apcd-cms:${{ steps.vars.outputs.BRANCH_NAME }},taccwma/apcd-cms:${{ steps.meta.outputs.tags }}
+          tags: taccwma/apcd-cms:${{ steps.vars.outputs.SHORT_SHA }},taccwma/apcd-cms:${{ steps.vars.outputs.BRANCH_NAME }},taccwma/apcd-cms:${{ steps.meta.outputs.tags || 'latest' }}
