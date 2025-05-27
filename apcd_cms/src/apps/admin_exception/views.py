@@ -27,7 +27,7 @@ class AdminExceptionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
         context = {}
 
         context['header'] = ['Created', 'Entity Organization - Payor Code', 'Requestor Name', 'Exception Type', 'Outcome', 'Status', 'Actions']
-        context['status_options'] = ['All']
+        context['status_options'] = ['All', 'Pending']
         context['org_options'] = ['All']
         context['outcome_modal_options'] = ['None', 'Granted', 'Denied', 'Withdrawn']
         context['status_modal_options'] = ['None', 'Complete', 'Pending']
@@ -64,7 +64,6 @@ class AdminExceptionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
                 'requested_expiration_date': exception[16],
                 'approved_threshold': exception[17],
                 'approved_expiration_date': exception[18],
-                'status': title_case(exception[19]) if exception[19] else 'None',
                 'status': title_case(exception[19]) if exception[19] else 'None',
                 'notes': exception[20],
                 'entity_name': exception[21],
