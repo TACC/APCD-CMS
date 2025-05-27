@@ -24,6 +24,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
+        images: taccwma/apcd-cms
         tags: |
           type=semver,pattern=v{{version}}
 
