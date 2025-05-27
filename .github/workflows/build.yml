@@ -20,6 +20,17 @@ jobs:
           echo "BRANCH_NAME=$(echo ${GITHUB_REF_NAME} | sed 's/[^[:alnum:]\.\_\-]/-/g')" >> "$GITHUB_OUTPUT";
           echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT";
 
+      - name: Extract release version
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        tags: |
+          type=sha
+          type=semver,pattern={{version}}
+          type=semver,pattern=v{{version}}
+          type=semver,pattern=v{{major}}.{{minor}}
+          type=semver,pattern=v{{major}}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
