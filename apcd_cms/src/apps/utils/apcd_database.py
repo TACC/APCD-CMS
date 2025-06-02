@@ -856,10 +856,10 @@ def get_cdl_exceptions(file_type):
     conn = None
     try:
         conn = db_connect()
-        
+
         query = """ SELECT  cdl_number as field_list_code, 
         data_element_name as field_list_value,
-        threshold as threshold_value,  
+        trunc(threshold) as threshold_value,  
         required,
         description 
         FROM cdl_ref 
