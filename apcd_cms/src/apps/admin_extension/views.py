@@ -28,7 +28,7 @@ class AdminExtensionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
     def get_extensions_list_json(self, extensions, *args, **kwargs):
         context = {}
 
-        context['header'] = ['Created', 'Entity Organization', 'Requestor Name', 'Extension Type', 'Outcome', 'Status', 'Approved Expiration', 'Actions']
+        context['header'] = ['Created', 'Entity Organization - Payor Code', 'Requestor Name', 'Extension Type', 'Outcome', 'Status', 'Approved Expiration', 'Actions']
         context['status_options'] = ['All', 'Pending']  # 'Pending' is default filter value on page load, need to have it hard-coded to not miss option once we reach client-side
         context['org_options'] = ['All']
         context['outcome_options'] = []
