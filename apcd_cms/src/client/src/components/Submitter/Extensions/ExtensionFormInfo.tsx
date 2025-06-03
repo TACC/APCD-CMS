@@ -17,7 +17,8 @@ const oneYearFromToday = maxDate.toISOString().split('T')[0];
 const ExtensionFormInfo: React.FC<{
   index: number;
   submitterData: SubmitterEntityData | undefined;
-}> = ({ index, submitterData }) => {
+  isModal?: boolean;
+}> = ({ index, submitterData, isModal = false }) => {
   const [selectedEntity, setSelectedEntity] = useState<string>();
   const [dataPeriods, setDataPeriods] = useState<ApplicableDataPeriod[]>([]);
   const { setFieldValue, values } = useFormikContext<any>();
@@ -28,11 +29,15 @@ const ExtensionFormInfo: React.FC<{
     error: dataPeriodsError,
   } = useSubmitterDataPeriods(selectedEntity);
 
+  /* Only reset data periods on submitter extenison form. Edit modal 
+  needs to be able to set values without being overwritten to ''*/
   useEffect(() => {
-    setDataPeriods([]); // Reset on entity change
-    setFieldValue(`extensions[${index}].currentExpectedDate`, '');
-    setFieldValue(`extensions[${index}].applicableDataPeriod`, '');
-  }, [selectedEntity, index, setFieldValue]);
+    if (!isModal) {
+      setDataPeriods([]); // Reset on entity change
+      setFieldValue(`extensions[${index}].currentExpectedDate`, '');
+      setFieldValue(`extensions[${index}].applicableDataPeriod`, '');
+    }
+  }, [selectedEntity, index, setFieldValue, isModal]);
 
   useEffect(() => {
     if (!dataPeriodsLoading && !dataPeriodsError) {
@@ -42,61 +47,67 @@ const ExtensionFormInfo: React.FC<{
 
   return (
     <>
-      <hr />
-      <h4>Extension Information {index + 1}</h4>
-      <p>This extension is on behalf of the following organization:</p>
-
-      <FieldWrapper
-        name={`extensions.${index}.businessName`}
-        label="Business Name"
-        required={true}
-      >
-        {submitterData && (
-          <>
-            <Field
-              as="select"
-              name={`extensions.${index}.businessName`}
-              id={`extensions.${index}.businessName`}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSelectedEntity(e.target.value);
-                setFieldValue(
-                  `extensions[${index}].businessName`,
-                  e.target.value
-                );
-              }}
-            >
-              <option value="">Select Business Name</option>
-              {submitterData?.submitters?.map((submitter: Entities) => (
-                <option
-                  value={submitter.submitter_id}
-                  key={submitter.submitter_id}
+      {!isModal && (
+        <>
+          <hr />
+          <h4>Extension Information {index + 1}</h4>
+          <p>This extension is on behalf of the following organization:</p>
+          <FieldWrapper
+            name={`extensions.${index}.businessName`}
+            label="Business Name"
+            required={!isModal}
+          >
+            {submitterData && (
+              <>
+                <Field
+                  as="select"
+                  name={`extensions.${index}.businessName`}
+                  id={`extensions.${index}.businessName`}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setSelectedEntity(e.target.value);
+                    setFieldValue(
+                      `extensions[${index}].businessName`,
+                      e.target.value
+                    );
+                  }}
                 >
-                  {submitter.entity_name} - Payor Code: {submitter.payor_code}
-                </option>
-              ))}
-            </Field>
-          </>
-        )}
+                  <option value="">Select Business Name</option>
+                  {submitterData?.submitters?.map((submitter: Entities) => (
+                    <option
+                      value={submitter.submitter_id}
+                      key={submitter.submitter_id}
+                    >
+                      {submitter.entity_name} - Payor Code:{' '}
+                      {submitter.payor_code}
+                    </option>
+                  ))}
+                </Field>
+              </>
+            )}
 
-        {!submitterData && (
-          <SectionMessage type="error">
-            There was an error finding your associated businesses.{' '}
-            <a href="/workbench/dashboard/tickets/create" className="wb-link">
-              Please submit a ticket.
-            </a>
-          </SectionMessage>
-        )}
-      </FieldWrapper>
-
+            {!submitterData && (
+              <SectionMessage type="error">
+                There was an error finding your associated businesses.{' '}
+                <a
+                  href="/workbench/dashboard/tickets/create"
+                  className="wb-link"
+                >
+                  Please submit a ticket.
+                </a>
+              </SectionMessage>
+            )}
+          </FieldWrapper>
+        </>
+      )}
       <FieldWrapper
-        name={`extensions.${index}.extensionType`}
+        name={`extensions.[${index}].extensionType`}
         label="Extension Type"
-        required={true}
+        required={!isModal}
       >
         <Field
           as="select"
-          name={`extensions.${index}.extensionType`}
-          id={`extensions.${index}.extensionType`}
+          name={`extensions.[${index}].extensionType`}
+          id={`extensions.[${index}].extensionType`}
         >
           <option value="">Select Extension Type</option>
           <option value="regular">Regularly Scheduled Submission</option>
@@ -107,51 +118,59 @@ const ExtensionFormInfo: React.FC<{
         </Field>
       </FieldWrapper>
 
-      <h6>Submission Dates</h6>
+      {!isModal && <h6>Submission Dates</h6>}
       <div className={styles.fieldRows}>
-        <FieldWrapper
-          name={`extensions.${index}.applicableDataPeriod`}
-          label={
-            <>
-              Applicable Data Period <sup>1</sup>
-            </>
-          }
-          required={true}
-          description="Enter month and year"
-        >
-          <Field
-            as="select"
+        {/* Edit modal needs to be able to set applicable data period field 
+        itself using the local selected entity information */}
+        {!isModal && (
+          <FieldWrapper
             name={`extensions.${index}.applicableDataPeriod`}
-            id={`extensions.${index}.applicableDataPeriod`}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue(
-                `extensions[${index}].applicableDataPeriod`,
-                e.target.value
-              );
-              setFieldValue(
-                `extensions[${index}].currentExpectedDate`,
-                dataPeriods.find((p) => p.data_period === e.target.value)
-                  ?.expected_date
-              );
-            }}
+            label={
+              <>
+                Applicable Data Period <sup>1</sup>
+              </>
+            }
+            required={!isModal}
+            description="Enter month and year"
           >
-            <option value="">-- Select period --</option>
-            {dataPeriods.map((item) => (
-              <option value={item.data_period} key={item.data_period}>
-                {item.data_period}
-              </option>
-            ))}
-          </Field>
-        </FieldWrapper>
+            <Field
+              as="select"
+              name={`extensions.${index}.applicableDataPeriod`}
+              id={`extensions.${index}.applicableDataPeriod`}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue(
+                  `extensions[${index}].applicableDataPeriod`,
+                  e.target.value
+                );
+                setFieldValue(
+                  `extensions[${index}].currentExpectedDate`,
+                  dataPeriods.find((p) => p.data_period === e.target.value)
+                    ?.expected_date
+                );
+              }}
+            >
+              <option value="">-- Select period --</option>
+              {dataPeriods.map((item) => (
+                <option value={item.data_period} key={item.data_period}>
+                  {item.data_period}
+                </option>
+              ))}
+            </Field>
+          </FieldWrapper>
+        )}
 
         <FieldWrapper
           name={`extensions.${index}.requestedTargetDate`}
           label={
             <>
-              Requested Target Date <sup>2</sup>
+              Requested Target Date
+              {
+                /* Don't show tech info for admin modal */
+                !isModal && <sup>2</sup>
+              }
             </>
           }
-          required={true}
+          required={!isModal}
           className={`position-relative ${styles.dateInputContainer}`}
         >
           <Field
@@ -165,11 +184,7 @@ const ExtensionFormInfo: React.FC<{
 
         <FieldWrapper
           name={`extensions.${index}.currentExpectedDate`}
-          label={
-            <>
-              Current Expected Date <sup>3</sup>
-            </>
-          }
+          label={<>Current Expected Date {!isModal && <sup>3</sup>}</>}
           required={false}
           className={`position-relative ${styles.dateInputContainer} `}
         >
