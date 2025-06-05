@@ -77,7 +77,7 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
       extensions: [
         {
           businessName: currentExtension.org_name,
-          extensionType: currentExtension.type.toLowerCase(),
+          extensionType: currentExtension.type.toLowerCase().replace(" ", '_'),
           applicableDataPeriod: currentExtension.applicable_data_period,
           requestedTargetDate: currentExtension.requested_target_date,
           currentExpectedDate: currentExtension?.current_expected_date,
