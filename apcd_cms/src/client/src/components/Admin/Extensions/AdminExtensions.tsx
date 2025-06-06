@@ -129,7 +129,9 @@ export const AdminExtensions: React.FC = () => {
             data?.page.map((row: ExtensionRow, rowIndex: number) => (
               <tr key={rowIndex}>
                 <td>{formatDate(row.created)}</td>
-                <td>{row.org_name}</td>
+                <td>
+                  {row.org_name} - {row.payor_code}
+                </td>
                 <td>{row.requestor}</td>
                 <td>{row.type}</td>
                 <td>{row.ext_outcome}</td>

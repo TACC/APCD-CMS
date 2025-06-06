@@ -28,7 +28,7 @@ class AdminExtensionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
     def get_extensions_list_json(self, extensions, *args, **kwargs):
         context = {}
 
-        context['header'] = ['Created', 'Entity Organization', 'Requestor Name', 'Extension Type', 'Outcome', 'Status', 'Approved Expiration', 'Actions']
+        context['header'] = ['Created', 'Entity Organization - Payor Code', 'Requestor Name', 'Extension Type', 'Outcome', 'Status', 'Approved Expiration', 'Actions']
         context['status_options'] = ['All', 'Pending']  # 'Pending' is default filter value on page load, need to have it hard-coded to not miss option once we reach client-side
         context['org_options'] = ['All']
         context['outcome_options'] = []
@@ -141,21 +141,9 @@ class UpdateExtensionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
 
     def put(self, request, ext_id):
         data = json.loads(request.body)
-
-        updated_data = {}
-        updated_data['extension_id'] = ext_id
-        updated_data['status'] = data['ext_status']
-        updated_data['outcome'] = data['ext_outcome']
-        updated_data['approved_expiration_date'] = data['approved_expiration_date']
-        updated_data['applicable_data_period'] = data['applicable_data_period']
-        updated_data['notes'] = data['notes']
-
-        errors = []
-        extension_response = update_extension(updated_data)
+        extension_response = update_extension(data)
         if self._err_msg(extension_response):
-            errors.append(self._err_msg(extension_response))
-        if len(errors) != 0:
-            logger.error(errors)
-            return JsonResponse({'message': 'Cannot edit extension'}, status=500)
+            logger.error(self._err_msg(extension_response))
+            return JsonResponse({'response': 'error', 'message': 'Cannot edit extension'}, status=500)
 
         return JsonResponse({'response': 'success'})

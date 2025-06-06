@@ -2,17 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Modal, ModalBody, ModalHeader, Row, Col, Alert } from 'reactstrap';
 import { Field, useFormik, FormikHelpers, FormikProvider } from 'formik';
 import { fetchUtil } from 'utils/fetchUtil';
-import { formatDate, formatUTCDate } from 'utils/dateUtil';
 import * as Yup from 'yup';
 import { ExtensionRow } from 'hooks/admin';
-import { useSubmitterDataPeriods } from 'hooks/entities';
+import { useSubmitterDataPeriods, useEntities } from 'hooks/entities';
 import QueryWrapper from 'core-wrappers/QueryWrapper';
-import {
-  convertPeriodLabelToApiValue,
-  convertApiValueToPeriodLabel,
-} from 'utils/dateUtil';
+import { convertPeriodLabelToApiValue } from 'utils/dateUtil';
 import FieldWrapper from 'core-wrappers/FieldWrapperFormik';
 import Button from 'core-components/Button';
+import ExtensionFormInfo from 'apcd-components/Submitter/Extensions/ExtensionFormInfo';
 
 interface EditExtensionModalProps {
   isVisible: boolean;
@@ -24,11 +21,17 @@ interface EditExtensionModalProps {
 }
 
 interface FormValues {
+  extensions: {
+    extensionType: string;
+    applicableDataPeriod: string;
+    requestedTargetDate: string;
+    currentExpectedDate: string;
+  }[];
+  justification: string;
   ext_outcome: string;
   ext_status: string;
   ext_id: string;
   approved_expiration_date: string;
-  applicable_data_period: string;
   notes: string;
 }
 
@@ -53,97 +56,41 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
     error: submitterDataError,
   } = useSubmitterDataPeriods(extension?.submitter_id);
 
+  const {
+    data: entitiesData,
+    isLoading: entitiesLoading,
+    isError: entitiesError,
+  } = useEntities();
+
   useEffect(() => {
     setCurrentExtension(extension);
   }, [extension]);
 
   if (!currentExtension) return null;
 
-  const extensionFields = [
-    {
-      label: 'Created',
-      value: currentExtension?.created
-        ? formatDate(currentExtension.created)
-        : 'None',
-    },
-    {
-      label: 'Entity Organization',
-      value: currentExtension?.org_name,
-    },
-    {
-      label: 'Requestor',
-      value: currentExtension?.requestor,
-    },
-    {
-      label: 'Requestor Email',
-      value: currentExtension?.requestor_email,
-    },
-    {
-      label: 'Extension Type',
-      value: currentExtension?.type,
-    },
-    {
-      label: 'Status',
-      value: currentExtension?.ext_status,
-    },
-    {
-      label: 'Outcome',
-      value: currentExtension?.ext_outcome,
-    },
-    {
-      label: 'Applicable Data Period',
-      value: currentExtension?.applicable_data_period,
-    },
-    {
-      label: 'Current Expected Date',
-      value:
-        currentExtension?.current_expected_date &&
-        currentExtension?.current_expected_date !== 'None'
-          ? formatUTCDate(currentExtension?.current_expected_date)
-          : 'None',
-    },
-    {
-      label: 'Requested Target Date',
-      value:
-        currentExtension?.requested_target_date &&
-        currentExtension?.requested_target_date !== 'None'
-          ? formatUTCDate(currentExtension?.requested_target_date)
-          : 'None',
-    },
-    {
-      label: 'Approved Expiration Date',
-      value:
-        currentExtension?.approved_expiration_date &&
-        currentExtension?.approved_expiration_date !== 'None'
-          ? formatUTCDate(currentExtension?.approved_expiration_date)
-          : 'None',
-    },
-    {
-      label: 'Extension Justification',
-      value: currentExtension?.explanation_justification,
-    },
-    {
-      label: 'Extension Notes',
-      value: currentExtension?.notes,
-    },
-    {
-      label: 'Last Updated',
-      value:
-        currentExtension?.updated_at && currentExtension?.updated_at !== 'None'
-          ? formatDate(currentExtension?.updated_at)
-          : 'None',
-    },
-  ];
-
   // Use the custom hook to get form fields and validation
   const useFormFields = () => {
     const initialValues: FormValues = {
-      ...currentExtension,
-      ext_id: currentExtension?.ext_id,
+      extensions: [
+        {
+          extensionType: currentExtension.type.toLowerCase().replace(" ", '_'),
+          applicableDataPeriod: currentExtension.applicable_data_period,
+          requestedTargetDate: currentExtension.requested_target_date,
+          currentExpectedDate: currentExtension?.current_expected_date,
+        },
+      ],
+      justification: currentExtension.explanation_justification,
+      ext_outcome: currentExtension.ext_outcome,
+      ext_status: currentExtension.ext_status,
+      ext_id: currentExtension.ext_id,
+      approved_expiration_date: currentExtension.approved_expiration_date,
       notes: currentExtension?.notes || 'None', // Set notes to 'None' if it is null
     };
 
     const validationSchema = Yup.object({
+      justificiation: Yup.string()
+        .max(2000, 'Notes cannot exceed 2000 characters')
+        .nullable(),
       notes: Yup.string()
         .max(2000, 'Notes cannot exceed 2000 characters')
         .nullable(),
@@ -161,7 +108,7 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
     const api_values = {
       ...values,
       applicable_data_period: convertPeriodLabelToApiValue(
-        values['applicable_data_period']
+        values.extensions[0].applicableDataPeriod
       ),
     };
     const url = `administration/update-extension/${ext_id}/`;
@@ -180,7 +127,7 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
           ...prevExtension!,
           ext_status: values.ext_status,
           ext_outcome: values.ext_outcome,
-          applicable_data_period: values.applicable_data_period,
+          applicable_data_period: values.extensions[0].applicableDataPeriod,
           approved_expiration_date: values.approved_expiration_date,
           notes: values.notes,
           updated_at: new Date().toISOString(),
@@ -239,28 +186,46 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
           {currentExtension.org_name}
         </ModalHeader>
         <ModalBody>
-          <h4 className="modal-header">Edit Selected Extension</h4>
           <QueryWrapper
             isLoading={submitterDataLoading}
             error={submitterDataError as Error}
           >
             <FormikProvider value={formik}>
               <form onSubmit={formik.handleSubmit}>
+                {formik.values.extensions.map((extension, index) => (
+                  <ExtensionFormInfo
+                    key={index}
+                    index={index}
+                    submitterData={entitiesData}
+                    isModal={true}
+                  />
+                ))}
                 <Row>
                   <Col md={3}>
                     <FieldWrapper
-                      name="applicable_data_period"
+                      name="extensions[0].applicableDataPeriod"
                       label="Applicable Data Period"
                       required={false}
                     >
                       <Field
                         as="select"
-                        name="applicable_data_period"
-                        id="applicable_data_period"
+                        name="extensions[0].applicableDataPeriod"
+                        id="extensions[0].applicableDataPeriod"
                         value={convertPeriodLabelToApiValue(
-                          formik.values.applicable_data_period
+                          formik.values.extensions[0].applicableDataPeriod
                         )}
-                        onChange={formik.handleChange}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          formik.setFieldValue(
+                            `extensions[0].applicableDataPeriod`,
+                            e.target.value
+                          );
+                          formik.setFieldValue(
+                            `extensions[0].currentExpectedDate`,
+                            submitterData?.data_periods?.find(
+                              (p) => p.data_period === e.target.value
+                            )?.expected_date
+                          );
+                        }}
                         onBlur={formik.handleBlur}
                       >
                         {submitterData?.data_periods?.map((item) => (
@@ -273,7 +238,7 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
                         ))}
                       </Field>
                       <div className="help-text">
-                        Current: {currentExtension.applicable_data_period}
+                        Submitted: {currentExtension.applicable_data_period}
                       </div>
                     </FieldWrapper>
                   </Col>
@@ -295,14 +260,6 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      <div className="help-text">
-                        Requested Target Date:{' '}
-                        {currentExtension.requested_target_date
-                          ? new Date(
-                              currentExtension.requested_target_date
-                            ).toLocaleDateString()
-                          : 'None'}
-                      </div>
                     </FieldWrapper>
                   </Col>
                   <Col md={3}>
@@ -361,6 +318,24 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
                     </FieldWrapper>
                   </Col>
                   <Col md={6}>
+                    <FieldWrapper
+                      name="justification"
+                      label="Justification"
+                      required={false}
+                    >
+                      <Field
+                        as="textarea"
+                        name="justification"
+                        id="justification"
+                        rows="5"
+                        maxLength="2000" // Set the maxLength attribute
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      <div className="help-text">2000 character limit</div>
+                    </FieldWrapper>
+                  </Col>
+                  <Col md={6}>
                     <FieldWrapper name="notes" label="Notes" required={false}>
                       <Field
                         as="textarea"
@@ -392,16 +367,6 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
               </form>
             </FormikProvider>
           </QueryWrapper>
-          <hr />
-          <h4 className="modal-header">Current Extension Information</h4>
-          <div>
-            {extensionFields.map((field, index) => (
-              <Row key={index}>
-                <Col md={{ size: 4, offset: 1 }}>{field.label}:</Col>
-                <Col md={6}>{field.value}</Col>
-              </Row>
-            ))}
-          </div>
         </ModalBody>
       </Modal>
     </>

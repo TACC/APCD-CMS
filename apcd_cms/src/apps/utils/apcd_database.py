@@ -1126,34 +1126,53 @@ def update_extension(form):
             values = [datetime.now()]  # Timestamp for updated_at
 
             # Map form fields to DB columns
+            # Form field name on left, DB column on right
             columns = {
-                'applicable_data_period': 'applicable_data_period',
-                'status': 'status',
-                'outcome': 'outcome',
-                'approved_expiration_date': 'approved_expiration_date'
+                'ext_status': 'status',
+                'ext_outcome': 'outcome',
+                'approved_expiration_date': 'approved_expiration_date',
+                'justification': 'explanation_justification',
+            }
+            extension_columns = {
+                'extensionType': 'extension_type',
+                'applicableDataPeriod': 'applicable_data_period',
+                'requestedTargetDate': 'requested_target_date',
+                'currentExpectedDate': 'current_expected_date'
             }
 
             # Build the SET clause dynamically
             set_clauses = []
+            # Process top-level form fields
             for field, column_name in columns.items():
                 value = form.get(field)
                 if value not in (None, "", "None"):
                     set_clauses.append(f"{column_name} = %s")
-                    if column_name == 'applicable_data_period':
-                        values.append(int(value.replace('-', '')))
-                    elif column_name == 'approved_expiration_date':
-                        # Convert to None if the value is 'None' (string)
-                        values.append(None if value == 'None' else _clean_value(value))
-                    else:
-                        values.append(_clean_value(value))
-
+                    values.append(value)
+            # Process extension fields from the nested array
+            if form.get('extensions') and len(form['extensions']) > 0:
+                extension = form['extensions'][0]
+                for field, column_name in extension_columns.items():
+                    value = extension.get(field)
+                    if value not in (None, "", "None"):
+                        set_clauses.append(f"{column_name} = %s")
+                        # Special handling for applicable_data_period conversion
+                        if column_name == 'applicable_data_period':
+                            # Convert "Jan. 2024" to 202401
+                            try:
+                                date_obj = datetime.strptime(value, '%b. %Y')
+                                values.append(int(date_obj.strftime('%Y%m')))
+                            except (ValueError, TypeError):
+                                # Skip if conversion fails
+                                set_clauses.pop()  # Remove the clause if error
+                                continue
+                        else:
+                            values.append(value)
             # Include 'notes' field, allowing it to be cleared
             set_clauses.append("notes = %s")
-            values.append(_clean_value(form.get('notes', "")))
+            values.append(form.get('notes', ''))
 
             query += ", " + ", ".join(set_clauses) + " WHERE extension_id = %s"
-            values.append(_clean_value(form['extension_id']))
-
+            values.append(form.get('ext_id'))
             cur.execute(query, values)
             conn.commit()
     except Exception as error:

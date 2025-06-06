@@ -31,8 +31,12 @@ const ViewExtensionModal: React.FC<{
               </Col>
             </Row>
             <Row>
-              <Col md={{ size: 4, offset: 1 }}>Entity Organization</Col>
-              <Col md={7}>{extension.org_name}</Col>
+              <Col md={{ size: 4, offset: 1 }}>
+                Entity Organization - Payor Code
+              </Col>
+              <Col md={7}>
+                {extension.org_name} - {extension.payor_code}
+              </Col>
             </Row>
             <Row>
               <Col md={{ size: 4, offset: 1 }}>Requestor</Col>
