@@ -22,14 +22,11 @@ interface EditExtensionModalProps {
 
 interface FormValues {
   extensions: {
-    businessName: string;
     extensionType: string;
     applicableDataPeriod: string;
     requestedTargetDate: string;
     currentExpectedDate: string;
   }[];
-  requestorName: string;
-  requestorEmail: string;
   justification: string;
   ext_outcome: string;
   ext_status: string;
@@ -76,15 +73,12 @@ const EditExtensionModal: React.FC<EditExtensionModalProps> = ({
     const initialValues: FormValues = {
       extensions: [
         {
-          businessName: currentExtension.org_name,
           extensionType: currentExtension.type.toLowerCase().replace(" ", '_'),
           applicableDataPeriod: currentExtension.applicable_data_period,
           requestedTargetDate: currentExtension.requested_target_date,
           currentExpectedDate: currentExtension?.current_expected_date,
         },
       ],
-      requestorName: currentExtension.requestor,
-      requestorEmail: currentExtension.requestor_email,
       justification: currentExtension.explanation_justification,
       ext_outcome: currentExtension.ext_outcome,
       ext_status: currentExtension.ext_status,
