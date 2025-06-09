@@ -163,7 +163,7 @@ export const RegistrationList: React.FC<{
             ))
           ) : (
             <tr>
-              <td colSpan={5} style={{ textAlign: 'center' }}>
+              <td colSpan={data.header.length} style={{ textAlign: 'center' }}>
                 No Data available
               </td>
             </tr>
