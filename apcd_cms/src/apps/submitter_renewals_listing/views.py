@@ -46,7 +46,7 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
                 page_num = 1
             response_json = get_registration_list_json(registrations_content, request.GET.get('status'),
                                                        request.GET.get('org'), page_num, *args, **kwargs)
-            response_json['header'] = ['Business Name', 'Year', 'Location', 'Registration Status', 'Actions']
+            response_json['header'] = ['Business Name', 'Year', 'Created', 'Registration Status', 'Actions']
             response_json['pagination_url_namespaces'] = 'register:submitter_regis_table'
             return JsonResponse({'response': response_json})
 
