@@ -51,7 +51,8 @@ export type RegistrationContent = {
 export type RegistrationRow = {
   biz_name: string;
   year: string;
-  posted_date: string;
+  type: string;
+  location: string;
   reg_status: string;
   reg_id: number;
 };

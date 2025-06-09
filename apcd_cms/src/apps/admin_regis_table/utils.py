@@ -10,9 +10,7 @@ from datetime import date as datetimeDate
 def get_registration_list_json(registrations_content, status_filter, org_filter, page_num, *args, **kwargs):
     context = {}
 
-    context['header'] = ['Business Name', 'Year', 'Created', 'Registration Status', 'Actions']
-    print("HEADERS SENT TO FRONTEND:", context['header'])
-
+    context['header'] = ['Business Name', 'Year', 'Type', 'Location', 'Registration Status', 'Actions']
     context['status_options'] = ['All', 'Received', 'Processing', 'Complete', 'Withdrawn']
     context['org_options'] = ['All']
 
@@ -49,7 +47,8 @@ def get_registration_list_json(registrations_content, status_filter, org_filter,
         {
             'biz_name': obj['biz_name'],
             'year': obj['year'],
-            'posted_date': obj['posted_date'],
+            'type': obj['type'],
+            'location': obj['location'],
             'reg_status': obj['reg_status'],
             'reg_id': obj['reg_id'],
         }
