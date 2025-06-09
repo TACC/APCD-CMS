@@ -17,7 +17,7 @@ def _set_registration_for_listing(reg, reg_ents=None):
 
     return {
         'biz_name': reg[5],
-        'type': org_types[reg[4]] if (reg[4] and reg[4] in org_types.keys()) else None,
+        #'type': org_types[reg[4]] if (reg[4] and reg[4] in org_types.keys()) else None,
         'reg_status': reg[3].title() if reg[3] else None,
         'reg_id': reg[0],
         'year': reg[10],
