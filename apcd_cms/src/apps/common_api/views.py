@@ -67,17 +67,15 @@ class cdlsView(APCDGroupAccessAPIMixin, BaseAPIView):
         return JsonResponse({"cdls": cdls_response})
 
 
-class DataPeriodsView(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
-    '''
-        Requires admin access to view data period for any given submitter.
-    '''
+class DataPeriodsView(APCDGroupAccessAPIMixin, BaseAPIView):
     def get(self, request, *args, **kwargs):
         submitter_id = request.GET.get('submitter_id', None)
         if submitter_id is None:
             raise Http404("Submitter Id not provided")
         if not is_apcd_admin(request.user):
-            # if user is not apcd admin, then submitter admin
-            # should have access to the submitter
+            # if user is not apcd admin, then submitter_id 
+            # must match only data periods with the same 
+            # submitter id
             submitters = apcd_database.get_submitter_info(request.user.username)
             if not any(submitter_id == str(submitter[0]) for submitter in submitters):
                 return JsonResponse({'error': f'Unauthorized for submitter id {submitter_id}'}, status=403)
