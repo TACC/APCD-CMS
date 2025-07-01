@@ -119,7 +119,7 @@ class ExtensionFormApi(APCDGroupAccessAPIMixin, BaseAPIView):
 
         context['page_num'] = page_num
         context['total_pages'] = page_info['page'].paginator.num_pages
-        context['pagination_url_namespaces'] = 'administration:admin_extension'
+        context['pagination_url_namespaces'] = 'extension:extension-list'
         return context
 
     def _set_extension(self, ext):

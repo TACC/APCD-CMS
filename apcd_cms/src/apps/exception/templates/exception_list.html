@@ -7,26 +7,6 @@
 <link rel="stylesheet" href="{% static 'exception/css/table.css' %}">
 <div class="container">
   {% include "nav_cms_breadcrumbs.html" %}
-
-  <h1>View Exception Requests</h1>
-  <hr />
-  <p style="margin-bottom: 30px">Your submitted exception requests</p>
-  <hr/>
   <div id="exceptions-root"></div>
 </div>
-<script>
-
-      function openAction(exception_id) {
-      var actionsDropdown, selectedOption, modal_id;
-      actionsDropdown = document.getElementById(`actionsDropdown_${exception_id}`);
-      /* grabs dropdown option number selected by user via selectedIndex, 
-        then grabs actual value associated with that option via 
-        options[index].value */
-      selectedOption = actionsDropdown.options[actionsDropdown.selectedIndex].value;
-      modal_id = `${selectedOption}Modal_${exception_id}`;
-      $(`#${modal_id}`).modal({backdrop: "static"}); /* modal appears manually */
-    
-      actionsDropdown.selectedIndex = 0; /* resets dropdown to display 'Select Action' again */
-    }
-  </script>
 {% endblock %}

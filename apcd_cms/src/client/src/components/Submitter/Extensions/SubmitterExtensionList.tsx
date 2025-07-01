@@ -9,7 +9,7 @@ import { formatDate, formatUTCDate } from 'utils/dateUtil';
 import { ClearOptionsButton } from 'apcd-components/ClearOptionsButton';
 
 export const SubmitterExtensionList: React.FC = () => {
-  const [status, setStatus] = useState('All');
+  const [status, setStatus] = useState('Pending');
   const [org, setOrg] = useState('All');
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, refetch } = useSubmitterExtensions(
@@ -23,7 +23,7 @@ export const SubmitterExtensionList: React.FC = () => {
     useState<ExtensionRow | null>(null);
 
   const clearSelections = () => {
-    setStatus('All');
+    setStatus('Pending');
     setOrg('');
     setPage(1);
   };
@@ -31,11 +31,6 @@ export const SubmitterExtensionList: React.FC = () => {
   const closeModal = () => {
     setIsViewModalOpen(false);
     setSelectedExtension(null);
-  };
-
-  const onEditSuccess = (updatedExtension: ExtensionRow) => {
-    // Refresh extension data after editing is successful
-    refetch();
   };
 
   if (isLoading) {
@@ -106,7 +101,7 @@ export const SubmitterExtensionList: React.FC = () => {
               </option>
             ))}
           </select>
-          {data?.selected_status !== 'All' || data?.selected_org ? (
+          {data?.selected_status !== 'Pending' || data?.selected_org ? (
             <ClearOptionsButton onClick={clearSelections} />
           ) : null}
         </div>

@@ -8,7 +8,7 @@ import { formatDate } from 'utils/dateUtil';
 import { ClearOptionsButton } from 'apcd-components/ClearOptionsButton';
 
 export const SubmitterExceptionList: React.FC = () => {
-  const [status, setStatus] = useState('All');
+  const [status, setStatus] = useState('Pending');
   const [org, setOrg] = useState('All');
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, refetch } = useSubmitterExceptions(
@@ -31,7 +31,7 @@ export const SubmitterExceptionList: React.FC = () => {
   }, [status, org]);
 
   const clearSelections = () => {
-    setStatus('All');
+    setStatus('Pending');
     setOrg('All');
     setPage(1);
   };
@@ -66,7 +66,10 @@ export const SubmitterExceptionList: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="container">
+      <h1>View Extension Requests</h1>
+      <p style={{ marginBottom: '30px' }}>Your submitted extension requests</p>
+      <hr />
       <div className="filter-container">
         <div className="filter-content">
           {/* Filter */}
@@ -101,7 +104,7 @@ export const SubmitterExceptionList: React.FC = () => {
                 </option>
               ))}
             </select>
-            {status !== 'All' || org !== 'All' ? (
+            {status !== 'Pending' || org !== 'All' ? (
               <ClearOptionsButton onClick={clearSelections} />
             ) : null}
           </div>
