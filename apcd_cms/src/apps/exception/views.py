@@ -24,7 +24,6 @@ class ExceptionFormApi(APCDGroupAccessAPIMixin, BaseAPIView):
         if (request.user.is_authenticated and has_apcd_group(request.user)):
             formatted_exception_data = []
             submitter_codes = []
-            # submitter_id = request.GET.get('s_id', None)
             submitters = apcd_database.get_submitter_info(request.user.username)
             submitter_codes = []
 
