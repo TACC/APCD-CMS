@@ -1285,14 +1285,7 @@ def get_all_extensions(submitter_codes=None):
     cur = None
     conn = None
     try:
-        conn = psycopg.connect(
-            host=APCD_DB['host'],
-            dbname=APCD_DB['database'],
-            user=APCD_DB['user'],
-            password=APCD_DB['password'],
-            port=APCD_DB['port'],
-            sslmode='require'
-        )
+        conn = db_connect()
         query = f"""
             SELECT 
                 extensions.extension_id, 
@@ -1325,7 +1318,6 @@ def get_all_extensions(submitter_codes=None):
             cur.execute(query, (submitter_codes,))
         else:
             cur.execute(query)
-        #cur.execute(query)
         return cur.fetchall()
 
     finally:
@@ -1338,14 +1330,7 @@ def get_all_exceptions(submitter_codes=None):
     cur = None
     conn = None
     try:
-        conn = psycopg.connect(
-            host=APCD_DB['host'],
-            dbname=APCD_DB['database'],
-            user=APCD_DB['user'],
-            password=APCD_DB['password'],
-            port=APCD_DB['port'],
-            sslmode='require'
-        )
+        conn = db_connect()
         query = f"""
             SELECT 
                 exceptions.exception_id, 
@@ -1384,7 +1369,6 @@ def get_all_exceptions(submitter_codes=None):
             cur.execute(query, (submitter_codes,))
         else:
             cur.execute(query)
-        #cur.execute(query)
         return cur.fetchall()
 
     finally:

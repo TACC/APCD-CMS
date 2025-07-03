@@ -4,6 +4,6 @@ from apps.extension.views import ExtensionFormTemplate, ExtensionFormApi, Extens
 app_name = 'extension'
 urlpatterns = [
     path('extension-request/', ExtensionFormTemplate.as_view(), name='extension'),
-    path('extension-list/', ExtensionListTemplate.as_view(), name='submitted-extensions'),
+    path('list-extensions/', ExtensionListTemplate.as_view(), name='submitted-extensions'),
     path('extension/api/', ExtensionFormApi.as_view(), name='extension-api'),
 ]

@@ -5,6 +5,6 @@ from apps.exception.views import ExceptionFormTemplate, ExceptionFormApi, Except
 app_name = 'exception'
 urlpatterns = [
     path('exception/', ExceptionFormTemplate.as_view(), name='exception'),
-    path('exception-list/', ExceptionListTemplate.as_view(), name='submitted-exceptions'),
+    path('list-exceptions/', ExceptionListTemplate.as_view(), name='submitted-exceptions'),
     path('exception/api/', ExceptionFormApi.as_view(), name='exception-api'),
 ]
