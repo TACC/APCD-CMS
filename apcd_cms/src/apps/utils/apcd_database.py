@@ -1281,19 +1281,12 @@ def get_current_exp_date(submitter_id, applicable_data_period):
         if conn is not None:
             conn.close()
 
-def get_all_extensions():
+def get_all_extensions(submitter_codes=None):
     cur = None
     conn = None
     try:
-        conn = psycopg.connect(
-            host=APCD_DB['host'],
-            dbname=APCD_DB['database'],
-            user=APCD_DB['user'],
-            password=APCD_DB['password'],
-            port=APCD_DB['port'],
-            sslmode='require'
-        )
-        query = """
+        conn = db_connect()
+        query = f"""
             SELECT 
                 extensions.extension_id, 
                 extensions.submitter_id,
@@ -1317,10 +1310,14 @@ def get_all_extensions():
             FROM extensions
             JOIN submitters
                 ON extensions.submitter_id = submitters.submitter_id
+            {f" WHERE submitters.submitter_code = ANY(%s)" if submitter_codes is not None else ''}
             ORDER BY extensions.created_at DESC
         """ 
         cur = conn.cursor()
-        cur.execute(query)
+        if submitter_codes:
+            cur.execute(query, (submitter_codes,))
+        else:
+            cur.execute(query)
         return cur.fetchall()
 
     finally:
@@ -1329,19 +1326,12 @@ def get_all_extensions():
         if conn is not None:
             conn.close()
 
-def get_all_exceptions():
+def get_all_exceptions(submitter_codes=None):
     cur = None
     conn = None
     try:
-        conn = psycopg.connect(
-            host=APCD_DB['host'],
-            dbname=APCD_DB['database'],
-            user=APCD_DB['user'],
-            password=APCD_DB['password'],
-            port=APCD_DB['port'],
-            sslmode='require'
-        )
-        query = """
+        conn = db_connect()
+        query = f"""
             SELECT 
                 exceptions.exception_id, 
                 exceptions.submitter_id,
@@ -1371,10 +1361,14 @@ def get_all_exceptions():
                 ON exceptions.submitter_id = submitters.submitter_id
             LEFT JOIN standard_codes 
                 ON UPPER(exceptions.data_file) = UPPER(standard_codes.item_code) AND list_name='submission_file_type'
+            {f" WHERE submitters.submitter_code = ANY(%s)" if submitter_codes is not None else ''}
             ORDER BY exceptions.created_at DESC
         """ 
         cur = conn.cursor()
-        cur.execute(query)
+        if submitter_codes:
+            cur.execute(query, (submitter_codes,))
+        else:
+            cur.execute(query)
         return cur.fetchall()
 
     finally:
