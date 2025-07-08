@@ -67,8 +67,8 @@ export const SubmitterExceptionList: React.FC = () => {
 
   return (
     <div className="container">
-      <h1>View Extension Requests</h1>
-      <p style={{ marginBottom: '30px' }}>Your submitted extension requests</p>
+      <h1>View Exception Requests</h1>
+      <p style={{ marginBottom: '30px' }}>Your submitted exception requests</p>
       <hr />
       <div className="filter-container">
         <div className="filter-content">
