@@ -152,7 +152,7 @@ export const RegistrationList: React.FC<{
                     className="status-filter"
                     onChange={(e) => openAction(e, row.reg_id)}
                   >
-                    <option value="">Select Action</option>
+                    <option disabled value="">Select Action</option>
                     <option value="viewRegistration">View Record</option>
                     {isAdmin ? (
                       <option value="editRegistration">Edit Record</option>

@@ -86,7 +86,7 @@ export const ExceptionForm: React.FC<{
               name={`exceptions[${index}].businessName`}
               id={`exceptions[${index}].businessName`}
             >
-              <option value="">Select a Business Name</option>
+              <option disabled value="">Select a Business Name</option>
               {submitterData?.submitters?.map((submitter: Entities) => (
                 <option
                   value={submitter.submitter_id}
@@ -123,7 +123,7 @@ export const ExceptionForm: React.FC<{
                 setFieldValue(`exceptions[${index}].fieldCode`, '');
               }}
             >
-              <option value="">Select a File Type</option>
+              <option disabled value="">Select a File Type</option>
               <option value="dc">Dental Claims</option>
               <option value="mc">Medical Claims</option>
               <option value="me">Member Eligibility</option>
@@ -151,7 +151,7 @@ export const ExceptionForm: React.FC<{
             >
               {cdlData ? (
                 <>
-                  <option value="">Select Field Code</option>
+                  <option disabled value="">Select Field Code</option>
                   {cdlData.cdls.map((cdl: any) => (
                     <option
                       key={cdl.field_list_code}
@@ -165,7 +165,7 @@ export const ExceptionForm: React.FC<{
                   ))}
                 </>
               ) : (
-                <option value="">Select a File Type Above First</option>
+                <option disabled value="">Select a File Type Above First</option>
               )}
             </Field>
           </FieldWrapper>
