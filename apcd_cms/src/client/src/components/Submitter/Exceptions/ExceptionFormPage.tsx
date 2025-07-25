@@ -237,7 +237,7 @@ export const ExceptionFormPage: React.FC = () => {
                       setIsSuccess(false);
                     }}
                   >
-                    <option value="">-- Select Exception Type --</option>
+                    <option disabled value="">Select Exception Type</option>
                     <option value="threshold">Threshold Exception</option>
                     <option value="other">Other Exception</option>
                   </Field>

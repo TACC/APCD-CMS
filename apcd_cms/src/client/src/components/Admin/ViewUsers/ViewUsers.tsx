@@ -160,7 +160,7 @@ export const ViewUsers: React.FC = () => {
                       onChange={(event) => handleActionChange(event, user)}
                       value={dropdownValue}
                     >
-                      <option value="" disabled>
+                      <option disabled value="">
                         Select Action
                       </option>
                       <option value="view">View Record</option>

@@ -71,7 +71,7 @@ const ExtensionFormInfo: React.FC<{
                     );
                   }}
                 >
-                  <option value="">Select Business Name</option>
+                  <option disabled value="">Select Business Name</option>
                   {submitterData?.submitters?.map((submitter: Entities) => (
                     <option
                       value={submitter.submitter_id}
@@ -109,7 +109,7 @@ const ExtensionFormInfo: React.FC<{
           name={`extensions.[${index}].extensionType`}
           id={`extensions.[${index}].extensionType`}
         >
-          <option value="">Select Extension Type</option>
+          <option disabled value="">Select Extension Type</option>
           <option value="regular">Regularly Scheduled Submission</option>
           <option value="resubmission">Corrected Resubmission</option>
           <option value="small_carrier">
@@ -149,7 +149,7 @@ const ExtensionFormInfo: React.FC<{
                 );
               }}
             >
-              <option value="">-- Select period --</option>
+              <option disabled value="">Select period</option>
               {dataPeriods.map((item) => (
                 <option value={item.data_period} key={item.data_period}>
                   {item.data_period}

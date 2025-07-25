@@ -134,7 +134,7 @@ export const SubmitterExtensionList: React.FC = () => {
                     className="status-filter"
                     onChange={(e) => openAction(e, row.ext_id)}
                   >
-                    <option value="">Select Action</option>
+                    <option disabled value="">Select Action</option>
                     <option value="viewExtension">View Record</option>
                   </select>
                 </td>
