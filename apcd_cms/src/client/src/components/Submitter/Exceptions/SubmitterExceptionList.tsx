@@ -139,7 +139,7 @@ export const SubmitterExceptionList: React.FC = () => {
                     className="status-filter"
                     onChange={(e) => openAction(e, row)}
                   >
-                    <option value="">Select Action</option>
+                    <option disabled value="">Select Action</option>
                     <option value="viewException">View Record</option>
                   </select>
                 </td>
