@@ -415,7 +415,7 @@ def create_registration_entity(entity, reg_id, from_update_reg=None):#, old_reg_
             entity['types_of_plans_medicare'],
             entity['types_of_plans_medicaid'],
             True,
-            entity['types_of_files_provider'],
+            True,
             entity['types_of_files_medical'],
             entity['types_of_files_pharmacy'],
             entity['types_of_files_dental']
@@ -483,7 +483,6 @@ def update_registration_entity(entity, reg_id):
             entity['types_of_plans_commercial'],
             entity['types_of_plans_medicare'],
             entity['types_of_plans_medicaid'],
-            entity['types_of_files_provider'],
             entity['types_of_files_medical'],
             entity['types_of_files_pharmacy'],
             entity['types_of_files_dental'],
@@ -510,7 +509,6 @@ def update_registration_entity(entity, reg_id):
             plan_coml = %s,
             plan_mdcr = %s,
             plan_mdcd = %s,
-            file_pv = %s,
             file_mc = %s,
             file_pc = %s,
             file_dc = %s
