@@ -91,7 +91,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
         name={`entities.${index}.types_of_files_hidden`}
         label="Types of Files"
         required={true}
-        description="Eligibility/Enrollment files are mandatory. At least one claims file type (Medical, Pharmacy, and Dental) must be selected."
+        description="Eligibility/Enrollment and Provider files are mandatory. At least one claims file type (Medical, Pharmacy, and Dental) must be selected."
       >
         <FormGroup
           className="checkboxselectmultiple"
@@ -129,7 +129,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
                   id={`entities.${index}.types_of_files_${fileType
                     .toLowerCase()
                     .replace('/', '_')}`}
-                  disabled={fileType == 'Eligibility/Enrollment' ? true : false}
+                  disabled={fileType == 'Eligibility/Enrollment' || fileType == 'Provider' ? true : false}
                 ></Field>
                 {fileType}
               </Label>
