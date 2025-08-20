@@ -268,7 +268,7 @@ export const RegistrationForm: React.FC<{
               </a>
               for details about completing and submitting this form, paying
               special attention to the schedule of submissions including test
-              files, historical files, and monthly files.
+              files and monthly files.
             </p>
 
             <hr />
