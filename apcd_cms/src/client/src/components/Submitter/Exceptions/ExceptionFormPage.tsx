@@ -14,7 +14,8 @@ import FieldWrapper from 'core-wrappers/FieldWrapperFormik';
 interface FormValues {
   exceptionType: string;
   exceptions: {
-    businessName: number;
+    // Business name initial value is a blank string but needs to submit as a number
+    businessName: number | string;
     fileType: string;
     fieldCode: string;
     expiration_date: string;
@@ -93,7 +94,7 @@ export const ExceptionFormPage: React.FC = () => {
   const initialValues: FormValues = {
     exceptionType: selectedExceptionType ? selectedExceptionType : '',
     exceptions: Array.from({ length: numberOfExceptionBlocks }).map(() => ({
-      businessName: 0,
+      businessName: '',
       fileType: '',
       fieldCode: '',
       expiration_date: '',
@@ -237,7 +238,9 @@ export const ExceptionFormPage: React.FC = () => {
                       setIsSuccess(false);
                     }}
                   >
-                    <option disabled value="">Select Exception Type</option>
+                    <option disabled value="">
+                      Select Exception Type
+                    </option>
                     <option value="threshold">Threshold Exception</option>
                     <option value="other">Other Exception</option>
                   </Field>
