@@ -45,37 +45,37 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
         </FormGroup>
       </FieldWrapper>
 
-      <h6 className={styles.boldedHeader}>Type of Plan</h6>
+      <h6 className={styles.boldedHeader}>Type of Payor</h6>
       <FieldWrapper
-        name={`entities.${index}.types_of_plans_hidden`}
-        label="Plan Types"
+        name={`entities.${index}.types_of_payors_hidden`}
+        label="Payor Types"
         required={true}
       >
         <div
-          id={`entities.${index}.types_of_plans_hidden`}
+          id={`entities.${index}.types_of_payors_hidden`}
           style={{ display: 'none' }}
         />
         <FormGroup
           className="checkboxselectmultiple"
-          id={`entities.${index}.types_of_plans`}
+          id={`entities.${index}.types_of_payors`}
         >
-          {['Commercial', 'Medicare', 'Medicaid'].map((planType) => (
+          {['Commercial', 'Medicare', 'Medicaid'].map((payorType) => (
             <FormGroup
-              key={`entities.${index}.types_of_plans_${planType.toLowerCase()}.wrapper`}
+              key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.wrapper`}
               noMargin={true}
             >
               <Label
-                htmlFor={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
-                key={`entities.${index}.types_of_plans_${planType.toLowerCase()}.label`}
+                htmlFor={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
+                key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.label`}
               >
                 <Field
                   type="checkbox"
-                  key={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
-                  name={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
-                  id={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
+                  key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
+                  name={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
+                  id={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
                 ></Field>
-                {planType}
-                {planType == 'Medicaid' ? (
+                {payorType}
+                {payorType == 'Medicaid' ? (
                   <small>(for state use only)</small>
                 ) : (
                   <></>
