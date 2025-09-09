@@ -41,6 +41,14 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
             # TODO this is only demonstrating the function working, needs to be intengrated into the app somehow!
             is_delinquent = get_user_delinquent(request.user.username)
             print("Is User " + request.user.username + " registration delinquent: " + str(is_delinquent))
+            # Build banner for frontend
+            banner = None
+            if is_delinquent:
+                banner = {
+                    "level": "warning",
+                    "code": "DELINQUENT",
+                    "text": "Your registration is delinquent. Please renew."
+                }
             for registration in registration_list:
                 registrations_content.append(registration)
             try:
@@ -51,5 +59,8 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
                                                        request.GET.get('org'), page_num, *args, **kwargs)
             response_json['header'] = ['Business Name', 'Year', 'Created', 'Registration Status', 'Actions']
             response_json['pagination_url_namespaces'] = 'register:submitter_regis_table'
+            # Attach banner + delinquency flag
+            response_json['banner'] = banner
+            response_json['is_delinquent'] = bool(is_delinquent)
             return JsonResponse({'response': response_json})
 

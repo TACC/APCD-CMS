@@ -11,6 +11,36 @@ import {
   useSubmitterRegistration,
 } from 'hooks/registrations';
 
+/** Banner types and helpers **/
+type BannerLevel = 'info' | 'success' | 'warning' | 'danger';
+type Banner = { level?: BannerLevel; text: string; code?: string };
+
+const bannerClass = (level?: BannerLevel) => {
+  switch (level) {
+    case 'success':
+      return 'c-message c-message--success';
+    case 'warning':
+      return 'c-message c-message--warning';
+    case 'danger':
+      return 'c-message c-message--error';
+    default:
+      return 'c-message c-message--info';
+  }
+};
+
+const MessageBanner: React.FC<{ banner?: Banner | null }> = ({ banner }) => {
+  if (!banner?.text) return null;
+  return (
+    <div
+      className={bannerClass(banner.level)}
+      role="alert"
+      style={{ marginBottom: 12 }}
+    >
+      {banner.text}
+    </div>
+  );
+};
+
 export const RegistrationList: React.FC<{
   useDataHook: any;
   isAdmin?: boolean;
@@ -85,123 +115,118 @@ export const RegistrationList: React.FC<{
   };
 
   return (
-    <div>
-      <div className="filter-container">
-        <div className="filter-content">
-          {/* Filter */}
-          <span>
-            <b>Filter by Status: </b>
-          </span>
-          <select
-            id="statusFilter"
-            className="status-filter"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            {data?.status_options.map((status, index) => (
-              <option className="dropdown-text" key={index} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
+  <div>
+    {/* Show server-provided delinquency banner if present */}
+    <MessageBanner banner={data?.banner as Banner | undefined} />
 
-          <span>
-            <b>Filter by Organization: </b>
-          </span>
-          <select
-            id="organizationFilter"
-            className="status-filter org-filter"
-            value={org}
-            onChange={(e) => setOrg(e.target.value)}
-          >
-            {data?.org_options.map((org, index) => (
-              <option className="dropdown-text" key={index} value={org}>
-                {org}
-              </option>
-            ))}
-          </select>
-          {data?.selected_status !== initStateFilter || data?.selected_org ? (
-            <ClearOptionsButton onClick={clearSelections} />
-          ) : null}
-        </div>
+    <div className="filter-container">
+      <div className="filter-content">
+        {/* Filter */}
+        <span><b>Filter by Status: </b></span>
+        <select
+          id="statusFilter"
+          className="status-filter"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+        >
+          {data?.status_options.map((status, index) => (
+            <option className="dropdown-text" key={index} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
+
+        <span><b>Filter by Organization: </b></span>
+        <select
+          id="organizationFilter"
+          className="status-filter org-filter"
+          value={org}
+          onChange={(e) => setOrg(e.target.value)}
+        >
+          {data?.org_options.map((org, index) => (
+            <option className="dropdown-text" key={index} value={org}>
+              {org}
+            </option>
+          ))}
+        </select>
+
+        {data?.selected_status !== initStateFilter || data?.selected_org ? (
+          <ClearOptionsButton onClick={clearSelections} />
+        ) : null}
       </div>
-      <table id="registrationTable" className="registration-table">
-        <thead>
-          <tr>
-            {data?.header.map((columnName: string, index: number) => (
-              <th key={index}>{columnName}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data?.page && data.page.length > 0 ? (
-            data?.page.map((row: RegistrationRow, rowIndex: number) => (
-              <tr key={rowIndex}>
-                <td>{row.biz_name}</td>
-                <td>{row.year ? row.year : 'None'}</td>
-                <td>
-                  {row.posted_date
-                    ? new Date(row.posted_date).toLocaleString()
-                    : '—'}
-                </td>
-                <td>{row.reg_status ? row.reg_status : 'None'}</td>
-                <td>
-                  <select
-                    id={`actionsDropdown_${row.reg_id}`}
-                    defaultValue=""
-                    className="status-filter"
-                    onChange={(e) => openAction(e, row.reg_id)}
-                  >
-                    <option disabled value="">Select Action</option>
-                    <option value="viewRegistration">View Record</option>
-                    {isAdmin ? (
-                      <option value="editRegistration">Edit Record</option>
-                    ) : (
-                      <option value="renewRegistration">
-                        Renew Registration
-                      </option>
-                    )}
-                  </select>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={data.header.length} style={{ textAlign: 'center' }}>
-                No Data available
+    </div>
+
+    <table id="registrationTable" className="registration-table">
+      <thead>
+        <tr>
+          {data?.header.map((columnName: string, index: number) => (
+            <th key={index}>{columnName}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data?.page && data.page.length > 0 ? (
+          data.page.map((row: RegistrationRow, rowIndex: number) => (
+            <tr key={rowIndex}>
+              <td>{row.biz_name}</td>
+              <td>{row.year ? row.year : 'None'}</td>
+              <td>
+                {row.posted_date ? new Date(row.posted_date).toLocaleString() : '—'}
+              </td>
+              <td>{row.reg_status ? row.reg_status : 'None'}</td>
+              <td>
+                <select
+                  id={`actionsDropdown_${row.reg_id}`}
+                  defaultValue=""
+                  className="status-filter"
+                  onChange={(e) => openAction(e, row.reg_id)}
+                >
+                  <option disabled value="">Select Action</option>
+                  <option value="viewRegistration">View Record</option>
+                  {isAdmin ? (
+                    <option value="editRegistration">Edit Record</option>
+                  ) : (
+                    <option value="renewRegistration">Renew Registration</option>
+                  )}
+                </select>
               </td>
             </tr>
-          )}
-        </tbody>
-      </table>
-      <div className={styles.paginatorContainer}>
-        <Paginator
-          pages={data?.total_pages ?? 0}
-          current={data?.page_num ?? 0}
-          callback={setPage}
-        />
-      </div>
-      {selectedRegistration && (
-        <>
-          <ViewRegistrationModal
-            reg_id={selectedRegistration.reg_id}
-            isVisible={isViewModalOpen}
-            useDataHook={
-              isAdmin ? useAdminRegistration : useSubmitterRegistration
-            }
-            onClose={() => setIsViewModalOpen(false)}
-          />
-          <EditRegistrationModal
-            reg_id={selectedRegistration.reg_id}
-            isVisible={isEditModalOpen}
-            useDataHook={
-              isAdmin ? useAdminRegistration : useSubmitterRegistration
-            }
-            status_options={data?.status_options as string[]}
-            onClose={() => setIsEditModalOpen(false)}
-          />
-        </>
-      )}
+          ))
+        ) : (
+          <tr>
+            <td colSpan={data.header.length} style={{ textAlign: 'center' }}>
+              No Data available
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+
+    <div className={styles.paginatorContainer}>
+      <Paginator
+        pages={data?.total_pages ?? 0}
+        current={data?.page_num ?? 0}
+        callback={setPage}
+      />
     </div>
+
+    {selectedRegistration && (
+      <>
+        <ViewRegistrationModal
+          reg_id={selectedRegistration.reg_id}
+          isVisible={isViewModalOpen}
+          useDataHook={isAdmin ? useAdminRegistration : useSubmitterRegistration}
+          onClose={() => setIsViewModalOpen(false)}
+        />
+        <EditRegistrationModal
+          reg_id={selectedRegistration.reg_id}
+          isVisible={isEditModalOpen}
+          useDataHook={isAdmin ? useAdminRegistration : useSubmitterRegistration}
+          status_options={data?.status_options as string[]}
+          onClose={() => setIsEditModalOpen(false)}
+        />
+      </>
+    )}
+  </div>
   );
-};
+}
