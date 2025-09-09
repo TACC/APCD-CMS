@@ -34,7 +34,7 @@ const MessageBanner: React.FC<{ banner?: Banner | null }> = ({ banner }) => {
     <div
       className={bannerClass(banner.level)}
       role="alert"
-      style={{ marginBottom: 12 }}
+      style={{ marginBottom: 12, fontSize: '1.1em', border: '2px solid, rgb(205, 151, 28)', padding: '10px', backgroundColor: 'rgb(253, 240, 211)'}}
     >
       {banner.text}
     </div>
