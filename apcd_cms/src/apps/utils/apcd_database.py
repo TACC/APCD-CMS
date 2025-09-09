@@ -372,6 +372,8 @@ def get_registration_entities(reg_id=None, submitter_code=None):
                 registration_entities.fein,
                 registration_entities.plan_coml,
                 registration_entities.plan_mdcr,
+                registration_entities.plan_mdcr_adv,
+                registration_entities.plan_mdcr_sup,
                 registration_entities.plan_mdcd,
                 registration_entities.file_me,
                 registration_entities.file_pv,
@@ -413,6 +415,8 @@ def create_registration_entity(entity, reg_id, from_update_reg=None):#, old_reg_
             _clean_value(entity['fein']),
             entity['types_of_payors_commercial'],
             entity['types_of_payors_medicare'],
+            entity['types_of_payors_medicare_advantage'],
+            entity['types_of_payors_medicare_supplementary'],
             entity['types_of_payors_medicaid'],
             True,
             True,
@@ -432,13 +436,15 @@ def create_registration_entity(entity, reg_id, from_update_reg=None):#, old_reg_
             fein,
             plan_coml,
             plan_mdcr,
+            plan_mdcr_adv,
+            plan_mdcr_sup,
             plan_mdcd,
             file_me,
             file_pv,
             file_mc,
             file_pc,
             file_dc
-        ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
         conn = psycopg.connect(
             host=APCD_DB['host'],
@@ -482,6 +488,8 @@ def update_registration_entity(entity, reg_id):
             _clean_value(entity['fein']),
             entity['types_of_payors_commercial'],
             entity['types_of_payors_medicare'],
+            entity['types_of_payors_medicare_advantage'],
+            entity['types_of_payors_medicare_supplementary'],
             entity['types_of_payors_medicaid'],
             entity['types_of_files_medical'],
             entity['types_of_files_pharmacy'],
@@ -508,6 +516,8 @@ def update_registration_entity(entity, reg_id):
             fein = %s,
             plan_coml = %s,
             plan_mdcr = %s,
+            plan_mdcr_adv = %s,
+            plan_mdcr_sup = %s,
             plan_mdcd = %s,
             file_mc = %s,
             file_pc = %s,
