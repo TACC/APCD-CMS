@@ -259,7 +259,7 @@ export const RegistrationForm: React.FC<{
               This form should be completed and submitted to register as a data
               submitter. Please review the
               <a
-                href="https://sph.uth.edu/research/centers/center-for-health-care-data/assets/tx-apcd/data-submission-guides/TXAPCD%20-%20Data%20Submission%20Guide%20(DSG).pdf"
+                href="https://go.uth.edu/DSG"
                 target="_blank"
                 rel="noreferrer"
               >

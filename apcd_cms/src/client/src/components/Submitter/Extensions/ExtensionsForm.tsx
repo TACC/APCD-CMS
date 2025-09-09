@@ -144,7 +144,7 @@ export const ExtensionRequestForm: React.FC = () => {
                   a regular submission or a corrected resubmission. Please
                   review the{' '}
                   <a
-                    href="https://sph.uth.edu/research/centers/center-for-health-care-data/texas-all-payor-claims-database/payor-registration-information"
+                    href="https://go.uth.edu/DSG"
                     target="_blank"
                     rel="noreferrer"
                   >
