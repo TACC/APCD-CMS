@@ -5,7 +5,17 @@ import { TextFormField } from './TextFormField';
 import styles from './RegistrationForm.module.css';
 import FieldWrapper from 'core-wrappers/FieldWrapperFormik';
 
-export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
+const getPayorTypes = (posted_date: Date | null) => {
+  // UTHealth's registration year begins Oct 1 of the previous year
+  // ex. reg year 2026 will begin 10/01/2025, so allow 2026 starting that day
+  const sep15_25 = new Date(`2025-09-15 0:00:00`);
+  if (posted_date && posted_date < sep15_25) {
+    return ['Commercial', 'Medicare', 'Medicaid'];
+  }
+  return ['Commerical', 'Medicare_Advantage', 'Medicare_Supplementary', 'Medicaid'];
+}
+
+export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | null, isEdit: boolean }> = ({ index, posted_date, isEdit }) => {
   return (
     <div>
       <h5 className={`${styles.boldedHeader} ${styles.spacedHeader}`}>
@@ -59,7 +69,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
           className="checkboxselectmultiple"
           id={`entities.${index}.types_of_payors`}
         >
-          {['Commercial', 'Medicare', 'Medicaid'].map((payorType) => (
+          {getPayorTypes(posted_date).map((payorType) => (
             <FormGroup
               key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.wrapper`}
               noMargin={true}
@@ -74,7 +84,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
                   name={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
                   id={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
                 ></Field>
-                {payorType}
+                {payorType.replace('_',' ')}
                 {payorType == 'Medicaid' ? (
                   <small>(for state use only)</small>
                 ) : (

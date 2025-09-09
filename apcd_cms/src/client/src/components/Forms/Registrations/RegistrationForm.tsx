@@ -47,6 +47,8 @@ const validationSchema = Yup.object().shape({
         }),
         types_of_payors_commercial: Yup.boolean(),
         types_of_payors_medicare: Yup.boolean(),
+        types_of_payors_medicare_advantage: Yup.boolean(),
+        types_of_payors_medicare_supplementary: Yup.boolean(),
         types_of_payors_medicaid: Yup.boolean(),
         types_of_files_eligibility_enrollment: Yup.boolean(),
         types_of_files_provider: Yup.boolean(),
@@ -141,6 +143,8 @@ const initialValues: RegistrationFormValues = {
       naic_company_code: '',
       types_of_payors_commercial: false,
       types_of_payors_medicare: false,
+      types_of_payors_medicare_advantage: false,
+      types_of_payors_medicare_supplementary: false,
       types_of_payors_medicaid: false,
       types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment: true,
@@ -445,7 +449,7 @@ export const RegistrationForm: React.FC<{
                   </small>
                 </h4>
                 {values.entities.map((entity, index) => (
-                  <RegistrationEntity key={index} index={index} />
+                  <RegistrationEntity key={index} index={index} posted_date={data ? data['registration_data']['posted_date'] : null} isEdit={isEdit} />
                 ))}
                 {values.entities.length === 5 && (
                   <p className="c-message c-message--type-info c-message--scope-inline">
@@ -477,6 +481,8 @@ export const RegistrationForm: React.FC<{
                           naic_company_code: '',
                           types_of_payors_commercial: false,
                           types_of_payors_medicare: false,
+                          types_of_payors_medicare_advantage: false,
+                          types_of_payors_medicare_supplementary: false,
                           types_of_payors_medicaid: false,
                           types_of_payors_hidden: false,
                           types_of_files_eligibility_enrollment: true,
