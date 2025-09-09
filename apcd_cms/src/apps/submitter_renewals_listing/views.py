@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from apps.utils.apcd_database import get_registrations, get_registration_contacts, get_registration_entities
+from apps.utils.apcd_database import get_registrations, get_registration_contacts, get_registration_entities, get_user_delinquent
 from django.views.generic.base import TemplateView
 from apps.admin_regis_table.utils import get_registration_list_json
 from apps.base.base import BaseAPIView, APCDSubmitterAdminAccessAPIMixin, APCDSubmitterAdminAccessTemplateMixin
@@ -38,6 +38,17 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
             return JsonResponse({'response': _set_registration(registration, registrations_entities, registrations_contacts)})
         else:
             registration_list = get_registrations(submitter_codes=submitter_codes)
+            # TODO this is only demonstrating the function working, needs to be intengrated into the app somehow!
+            is_delinquent = get_user_delinquent(request.user.username)
+            print("Is User " + request.user.username + " registration delinquent: " + str(is_delinquent))
+            # Build banner for frontend
+            banner = None
+            if is_delinquent:
+                banner = {
+                    "level": "warning",
+                    "code": "DELINQUENT",
+                    "text": "Your registration is delinquent. Please renew."
+                }
             for registration in registration_list:
                 registrations_content.append(registration)
             try:
@@ -48,5 +59,8 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
                                                        request.GET.get('org'), page_num, *args, **kwargs)
             response_json['header'] = ['Business Name', 'Year', 'Created', 'Registration Status', 'Actions']
             response_json['pagination_url_namespaces'] = 'register:submitter_regis_table'
+            # Attach banner + delinquency flag
+            response_json['banner'] = banner
+            response_json['is_delinquent'] = bool(is_delinquent)
             return JsonResponse({'response': response_json})
 
