@@ -208,7 +208,7 @@ def get_registrations(reg_id=None, submitter_codes=None):
         )
         query = f"""SELECT DISTINCT
                 registrations.registration_id,
-                registrations.posted_date,
+                registrations.created_at,
                 registrations.submitting_for_self,
                 registrations.registration_status,
                 registrations.org_type,
