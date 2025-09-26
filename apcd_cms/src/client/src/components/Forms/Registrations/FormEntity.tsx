@@ -9,7 +9,7 @@ const getPayorTypes = (posted_date: Date | null) => {
   // UTHealth's registration year begins Oct 1 of the previous year
   // ex. reg year 2026 will begin 10/01/2025, so allow 2026 starting that day
   const sep15_25 = new Date(`2025-09-15 0:00:00`);
-  if (posted_date && posted_date < sep15_25) {
+  if (posted_date && new Date(posted_date) < sep15_25) {
     return ['Commercial', 'Medicare', 'Medicaid'];
   }
   return ['Commerical', 'Medicare_Advantage', 'Medicare_Supplementary', 'Medicaid'];

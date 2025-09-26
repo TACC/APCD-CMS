@@ -449,7 +449,7 @@ export const RegistrationForm: React.FC<{
                   </small>
                 </h4>
                 {values.entities.map((entity, index) => (
-                  <RegistrationEntity key={index} index={index} posted_date={data ? data['registration_data']['posted_date'] : null} isEdit={isEdit} />
+                  <RegistrationEntity key={index} index={index} posted_date={values.posted_date && isEdit ? values.posted_date : null} isEdit={isEdit} />
                 ))}
                 {values.entities.length === 5 && (
                   <p className="c-message c-message--type-info c-message--scope-inline">
