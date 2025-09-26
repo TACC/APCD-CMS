@@ -85,7 +85,9 @@ const validationSchema = Yup.object().shape({
       .test(function (value) {
         if (
           !value.types_of_payors_commercial &&
-          !value.types_of_payors_medicare &&
+          !value.types_of_payors_medicare &&  // with addition of medicare advantage + supplementary, this is just useful for edit action on historical records
+          !value.types_of_payors_medicare_advantage &&
+          !value.types_of_payors_medicare_supplementary &&
           !value.types_of_payors_medicaid
         ) {
           return this.createError({
