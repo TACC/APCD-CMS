@@ -12,7 +12,7 @@ const getPayorTypes = (posted_date: Date | null) => {
   if (posted_date && new Date(posted_date) < sep15_25) {
     return ['Commercial', 'Medicare', 'Medicaid'];
   }
-  return ['Commerical', 'Medicare_Advantage', 'Medicare_Supplementary', 'Medicaid'];
+  return ['Commercial', 'Medicare_Advantage', 'Medicare_Supplementary', 'Medicaid'];
 }
 
 export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | null, isEdit: boolean }> = ({ index, posted_date, isEdit }) => {
