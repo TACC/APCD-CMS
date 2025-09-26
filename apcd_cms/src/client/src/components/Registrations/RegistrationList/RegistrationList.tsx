@@ -6,6 +6,7 @@ import ViewRegistrationModal from 'apcd-components/Registrations/ViewRegistratio
 import EditRegistrationModal from 'apcd-components/Registrations/EditRegistrationModal/EditRegistrationModal';
 import styles from './RegistrationList.module.css';
 import { ClearOptionsButton } from 'apcd-components/ClearOptionsButton';
+import { formatDate } from 'utils/dateUtil';
 import {
   useAdminRegistration,
   useSubmitterRegistration,
@@ -141,7 +142,7 @@ export const RegistrationList: React.FC<{
                 <td>{row.year ? row.year : 'None'}</td>
                 <td>
                   {row.posted_date
-                    ? new Date(row.posted_date).toLocaleString()
+                    ? formatDate(row.posted_date)
                     : '—'}
                 </td>
                 <td>{row.reg_status ? row.reg_status : 'None'}</td>
