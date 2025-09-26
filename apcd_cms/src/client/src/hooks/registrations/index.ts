@@ -33,6 +33,7 @@ export type RegistrationContact = {
 
 export type RegistrationContent = {
   reg_id: number;
+  posted_date: Date;
   biz_name: string;
   type: string | null | undefined;
   city: string;
@@ -80,6 +81,7 @@ export type RegistrationFormValues = {
   zip_code: string;
   reg_id?: number;
   reg_status?: string;
+  posted_date?: Date;
   entities: {
     entity_name: string;
     fein: string;
@@ -87,6 +89,8 @@ export type RegistrationFormValues = {
     naic_company_code: string;
     types_of_payors_commercial: boolean;
     types_of_payors_medicare: boolean;
+    types_of_payors_medicare_advantage: boolean;
+    types_of_payors_medicare_supplementary: boolean;
     types_of_payors_medicaid: boolean;
     types_of_payors_hidden?: boolean;
     types_of_files_eligibility_enrollment: boolean;
@@ -131,6 +135,7 @@ export function transformToRegistrationFormValues(
     zip_code: registration.zip.toString(),
     reg_id: registration.reg_id,
     reg_status: registration.status,
+    posted_date: registration.posted_date,
     entities: registration.entities.map((entity) => ({
       entity_name: entity.ent_name,
       fein: entity.fein ?? '',
@@ -138,6 +143,8 @@ export function transformToRegistrationFormValues(
       naic_company_code: entity.naic ?? '',
       types_of_payors_commercial: entity.payors_type['Commercial'],
       types_of_payors_medicare: entity.payors_type['Medicare'],
+      types_of_payors_medicare_advantage: entity.payors_type['Medicare Advantage'],
+      types_of_payors_medicare_supplementary: entity.payors_type['Medicare Supplementary'],
       types_of_payors_medicaid: entity.payors_type['Medicaid'],
       types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment:
