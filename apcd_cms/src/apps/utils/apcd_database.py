@@ -1473,9 +1473,8 @@ def get_user_delinquent(user_id):
 
             current_year = datetime.now().year
             query = """
-            select max(registration_year) from registrations 
-            left join submitters on submitters.registration_id = registrations.registration_id 
-            left join submitter_users on submitter_users.submitter_id = submitters.submitter_id 
+            select max(date_part('year',registration_submitters.created_at)) from registration_submitters 
+            left join submitter_users on submitter_users.submitter_id = registration_submitters.submitter_id 
             where user_id = %s
             """
             cur.execute(query, (user_id,))
