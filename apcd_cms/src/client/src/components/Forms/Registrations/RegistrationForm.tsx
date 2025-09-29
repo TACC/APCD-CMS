@@ -47,6 +47,8 @@ const validationSchema = Yup.object().shape({
         }),
         types_of_payors_commercial: Yup.boolean(),
         types_of_payors_medicare: Yup.boolean(),
+        types_of_payors_medicare_advantage: Yup.boolean(),
+        types_of_payors_medicare_supplementary: Yup.boolean(),
         types_of_payors_medicaid: Yup.boolean(),
         types_of_files_eligibility_enrollment: Yup.boolean(),
         types_of_files_provider: Yup.boolean(),
@@ -83,7 +85,9 @@ const validationSchema = Yup.object().shape({
       .test(function (value) {
         if (
           !value.types_of_payors_commercial &&
-          !value.types_of_payors_medicare &&
+          !value.types_of_payors_medicare &&  // with addition of medicare advantage + supplementary, this is just useful for edit action on historical records
+          !value.types_of_payors_medicare_advantage &&
+          !value.types_of_payors_medicare_supplementary &&
           !value.types_of_payors_medicaid
         ) {
           return this.createError({
@@ -141,6 +145,8 @@ const initialValues: RegistrationFormValues = {
       naic_company_code: '',
       types_of_payors_commercial: false,
       types_of_payors_medicare: false,
+      types_of_payors_medicare_advantage: false,
+      types_of_payors_medicare_supplementary: false,
       types_of_payors_medicaid: false,
       types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment: true,
@@ -445,7 +451,7 @@ export const RegistrationForm: React.FC<{
                   </small>
                 </h4>
                 {values.entities.map((entity, index) => (
-                  <RegistrationEntity key={index} index={index} />
+                  <RegistrationEntity key={index} index={index} posted_date={values.posted_date && isEdit ? values.posted_date : null} isEdit={isEdit} />
                 ))}
                 {values.entities.length === 5 && (
                   <p className="c-message c-message--type-info c-message--scope-inline">
@@ -477,6 +483,8 @@ export const RegistrationForm: React.FC<{
                           naic_company_code: '',
                           types_of_payors_commercial: false,
                           types_of_payors_medicare: false,
+                          types_of_payors_medicare_advantage: false,
+                          types_of_payors_medicare_supplementary: false,
                           types_of_payors_medicaid: false,
                           types_of_payors_hidden: false,
                           types_of_files_eligibility_enrollment: true,
