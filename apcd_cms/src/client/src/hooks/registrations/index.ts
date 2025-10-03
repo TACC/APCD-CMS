@@ -1,6 +1,7 @@
 export type RegFormData = {
   registration_data: RegistrationContent;
   renew: boolean;
+  medicare_date: string;
 };
 
 export { useRegFormData, usePostRegistration } from './useForm';
@@ -82,6 +83,7 @@ export type RegistrationFormValues = {
   reg_id?: number;
   reg_status?: string;
   posted_date?: Date;
+  medicare_date: string;
   entities: {
     entity_name: string;
     fein: string;
@@ -116,7 +118,8 @@ export type RegistrationFormValues = {
 
 export function transformToRegistrationFormValues(
   registration: RegistrationContent,
-  renew?: boolean | undefined
+  medicare_date: string,
+  renew?: boolean | undefined,
 ): RegistrationFormValues {
   const typeValueMap: Record<string, string> = {
     // to set database value for field rather than display value
@@ -136,6 +139,7 @@ export function transformToRegistrationFormValues(
     reg_id: registration.reg_id,
     reg_status: registration.status,
     posted_date: registration.posted_date,
+    medicare_date: medicare_date,
     entities: registration.entities.map((entity) => ({
       entity_name: entity.ent_name,
       fein: entity.fein ?? '',
