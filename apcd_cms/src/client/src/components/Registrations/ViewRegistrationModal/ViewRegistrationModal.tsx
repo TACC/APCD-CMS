@@ -26,7 +26,7 @@ const ViewRegistrationModal: React.FC<{
     status,
     entities,
     contacts,
-  } = data;
+  } = data['registration_data'];
 
   const closeBtn = (
     <button className="close" onClick={onClose} type="button">

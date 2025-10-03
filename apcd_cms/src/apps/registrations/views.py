@@ -18,6 +18,9 @@ RT_HOST = getattr(settings, 'RT_HOST', '')
 RT_UN = getattr(settings, 'RT_UN', '')
 RT_PW = getattr(settings, 'RT_PW', '')
 RT_QUEUE = getattr(settings, 'RT_QUEUE', '')
+MEDICARE_UPDATE_DEPLOY_DATE = getattr(settings, 'MEDICARE_UPDATE_DEPLOY_DATE', '')
+logger.error('medicare date:')
+logger.error(MEDICARE_UPDATE_DEPLOY_DATE)
 
 
 class RegistrationFormTemplate(AuthenticatedUserTemplateMixin, TemplateView):
@@ -42,7 +45,7 @@ class RegistrationFormApi(AuthenticatedUserAPIMixin, BaseAPIView):
             formatted_reg_data = _set_registration(registration_content, registration_entities, registration_contacts)
 
         if (request.user.is_authenticated and has_apcd_group(request.user)):
-            context = {'registration_data': formatted_reg_data, 'renew': renew}
+            context = {'registration_data': formatted_reg_data, 'renew': renew, 'medicare_date': MEDICARE_UPDATE_DEPLOY_DATE}
             return JsonResponse({'response': context})
         else: 
             return JsonResponse({'error': 'Unauthorized'}, status=403)

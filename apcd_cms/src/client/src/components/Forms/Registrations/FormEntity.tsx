@@ -5,17 +5,17 @@ import { TextFormField } from './TextFormField';
 import styles from './RegistrationForm.module.css';
 import FieldWrapper from 'core-wrappers/FieldWrapperFormik';
 
-const getPayorTypes = (posted_date: Date | null) => {
-  // UTHealth's registration year begins Oct 1 of the previous year
-  // ex. reg year 2026 will begin 10/01/2025, so allow 2026 starting that day
-  const sep15_25 = new Date(`2025-09-15 0:00:00`);
-  if (posted_date && new Date(posted_date) < sep15_25) {
+const getPayorTypes = (posted_date: Date | null, medicare_date: string) => {
+  // new medicare fields introduced to form Oct 2025; we retain the previously used 'Medicare' field for
+  // records created prior to these new fields being deployed
+  const medicare_deploy_date = new Date(medicare_date);
+  if (posted_date && new Date(posted_date) < medicare_deploy_date) {
     return ['Commercial', 'Medicare', 'Medicaid'];
   }
   return ['Commercial', 'Medicare_Advantage', 'Medicare_Supplementary', 'Medicaid'];
 }
 
-export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | null, isEdit: boolean }> = ({ index, posted_date, isEdit }) => {
+export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | null, isEdit: boolean, medicare_date: string }> = ({ index, posted_date, isEdit, medicare_date }) => {
   return (
     <div>
       <h5 className={`${styles.boldedHeader} ${styles.spacedHeader}`}>
@@ -69,7 +69,7 @@ export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | n
           className="checkboxselectmultiple"
           id={`entities.${index}.types_of_payors`}
         >
-          {getPayorTypes(posted_date).map((payorType) => (
+          {getPayorTypes(posted_date, medicare_date).map((payorType) => (
             <FormGroup
               key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.wrapper`}
               noMargin={true}
