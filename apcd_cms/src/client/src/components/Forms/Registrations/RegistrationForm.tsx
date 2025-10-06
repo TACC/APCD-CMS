@@ -137,6 +137,7 @@ const initialValues: RegistrationFormValues = {
   state: 'AL',
   zip_code: '',
   reg_id: -1,
+  medicare_date: '',
   entities: [
     {
       entity_name: '',
@@ -287,7 +288,8 @@ export const RegistrationForm: React.FC<{
           initialValues={
             data && isEdit
               ? transformToRegistrationFormValues( // use initialValues to preload data for edit registration
-                  data['registration_data']        // to leverage formik's dirty test and disable submit on form load
+                  data['registration_data'],        // to leverage formik's dirty test and disable submit on form load
+                  data['medicare_date'],
                 )
               : inputValues ?? initialValues
           }
@@ -305,6 +307,7 @@ export const RegistrationForm: React.FC<{
               if (data && !isEdit) {
                 setValues(transformToRegistrationFormValues(
                   data['registration_data'],
+                  data['medicare_date'],
                   data['renew']
                 ));
               }
@@ -450,8 +453,14 @@ export const RegistrationForm: React.FC<{
                     (If single company, enter the same organization as above.)
                   </small>
                 </h4>
+                {console.log(values)}
                 {values.entities.map((entity, index) => (
-                  <RegistrationEntity key={index} index={index} posted_date={values.posted_date && isEdit ? values.posted_date : null} isEdit={isEdit} />
+                  <RegistrationEntity 
+                    key={index}
+                    index={index}
+                    posted_date={values.posted_date && isEdit ? values.posted_date : null}
+                    isEdit={isEdit}
+                    medicare_date={values.medicare_date} />
                 ))}
                 {values.entities.length === 5 && (
                   <p className="c-message c-message--type-info c-message--scope-inline">

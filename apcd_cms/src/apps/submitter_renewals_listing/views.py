@@ -1,12 +1,15 @@
 from django.http import JsonResponse
 from apps.utils.apcd_database import get_registrations, get_registration_contacts, get_registration_entities
 from django.views.generic.base import TemplateView
+from django.conf import settings
 from apps.admin_regis_table.utils import get_registration_list_json
 from apps.base.base import BaseAPIView, APCDSubmitterAdminAccessAPIMixin, APCDSubmitterAdminAccessTemplateMixin
 from apps.utils.registrations_data_formatting import _set_registration
 from apps.submitter_renewals_listing.utils import get_submitter_codes
 import logging
 import json
+
+MEDICARE_UPDATE_DEPLOY_DATE = getattr(settings, 'MEDICARE_UPDATE_DEPLOY_DATE', '')
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +38,10 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
             registration = self._get_first_registration_entry(submitter_codes=submitter_codes, reg_id=reg_id)
             registrations_entities = get_registration_entities(reg_id=reg_id)
             registrations_contacts = get_registration_contacts(reg_id=reg_id)
-            return JsonResponse({'response': _set_registration(registration, registrations_entities, registrations_contacts)})
+            formatted_reg_data = _set_registration(registration, registrations_entities, registrations_contacts)
+
+            context = {'registration_data': formatted_reg_data, 'medicare_date': MEDICARE_UPDATE_DEPLOY_DATE}
+            return JsonResponse({'response': context})
         else:
             registration_list = get_registrations(submitter_codes=submitter_codes)
             for registration in registration_list:
