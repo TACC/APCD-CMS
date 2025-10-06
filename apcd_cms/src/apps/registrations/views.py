@@ -19,8 +19,6 @@ RT_UN = getattr(settings, 'RT_UN', '')
 RT_PW = getattr(settings, 'RT_PW', '')
 RT_QUEUE = getattr(settings, 'RT_QUEUE', '')
 MEDICARE_UPDATE_DEPLOY_DATE = getattr(settings, 'MEDICARE_UPDATE_DEPLOY_DATE', '')
-logger.error('medicare date:')
-logger.error(MEDICARE_UPDATE_DEPLOY_DATE)
 
 
 class RegistrationFormTemplate(AuthenticatedUserTemplateMixin, TemplateView):
