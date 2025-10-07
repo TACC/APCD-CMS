@@ -41,7 +41,7 @@ def _set_entities(reg_ent):
             "Commercial": reg_ent[9],
             "Medicare": reg_ent[10],
             "Medicare Advantage": reg_ent[11],
-            "Medicare Supplementary": reg_ent[12],
+            "Medicare Supplement": reg_ent[12],
             "Medicaid": reg_ent[13],
         },
         'files_type': {

@@ -48,7 +48,7 @@ const validationSchema = Yup.object().shape({
         types_of_payors_commercial: Yup.boolean(),
         types_of_payors_medicare: Yup.boolean(),
         types_of_payors_medicare_advantage: Yup.boolean(),
-        types_of_payors_medicare_supplementary: Yup.boolean(),
+        types_of_payors_medicare_supplement: Yup.boolean(),
         types_of_payors_medicaid: Yup.boolean(),
         types_of_files_eligibility_enrollment: Yup.boolean(),
         types_of_files_provider: Yup.boolean(),
@@ -85,9 +85,9 @@ const validationSchema = Yup.object().shape({
       .test(function (value) {
         if (
           !value.types_of_payors_commercial &&
-          !value.types_of_payors_medicare &&  // with addition of medicare advantage + supplementary, this is just useful for edit action on historical records
+          !value.types_of_payors_medicare &&  // with addition of medicare advantage + supplement, this is just useful for edit action on historical records
           !value.types_of_payors_medicare_advantage &&
-          !value.types_of_payors_medicare_supplementary &&
+          !value.types_of_payors_medicare_supplement &&
           !value.types_of_payors_medicaid
         ) {
           return this.createError({
@@ -147,7 +147,7 @@ const initialValues: RegistrationFormValues = {
       types_of_payors_commercial: false,
       types_of_payors_medicare: false,
       types_of_payors_medicare_advantage: false,
-      types_of_payors_medicare_supplementary: false,
+      types_of_payors_medicare_supplement: false,
       types_of_payors_medicaid: false,
       types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment: true,
@@ -493,7 +493,7 @@ export const RegistrationForm: React.FC<{
                           types_of_payors_commercial: false,
                           types_of_payors_medicare: false,
                           types_of_payors_medicare_advantage: false,
-                          types_of_payors_medicare_supplementary: false,
+                          types_of_payors_medicare_supplement: false,
                           types_of_payors_medicaid: false,
                           types_of_payors_hidden: false,
                           types_of_files_eligibility_enrollment: true,
