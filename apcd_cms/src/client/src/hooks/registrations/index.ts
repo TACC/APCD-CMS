@@ -92,7 +92,7 @@ export type RegistrationFormValues = {
     types_of_payors_commercial: boolean;
     types_of_payors_medicare: boolean;
     types_of_payors_medicare_advantage: boolean;
-    types_of_payors_medicare_supplementary: boolean;
+    types_of_payors_medicare_supplement: boolean;
     types_of_payors_medicaid: boolean;
     types_of_payors_hidden?: boolean;
     types_of_files_eligibility_enrollment: boolean;
@@ -148,7 +148,7 @@ export function transformToRegistrationFormValues(
       types_of_payors_commercial: entity.payors_type['Commercial'],
       types_of_payors_medicare: entity.payors_type['Medicare'],
       types_of_payors_medicare_advantage: entity.payors_type['Medicare Advantage'],
-      types_of_payors_medicare_supplementary: entity.payors_type['Medicare Supplementary'],
+      types_of_payors_medicare_supplement: entity.payors_type['Medicare Supplement'],
       types_of_payors_medicaid: entity.payors_type['Medicaid'],
       types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment:
