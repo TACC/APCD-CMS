@@ -45,9 +45,9 @@ const validationSchema = Yup.object().shape({
         naic_company_code: Yup.string().matches(/^(?!0+$)[0-9]{1,10}$/, {
           message: 'NAIC code is not properly formatted',
         }),
-        types_of_plans_commercial: Yup.boolean(),
-        types_of_plans_medicare: Yup.boolean(),
-        types_of_plans_medicaid: Yup.boolean(),
+        types_of_payors_commercial: Yup.boolean(),
+        types_of_payors_medicare: Yup.boolean(),
+        types_of_payors_medicaid: Yup.boolean(),
         types_of_files_eligibility_enrollment: Yup.boolean(),
         types_of_files_provider: Yup.boolean(),
         types_of_files_medical: Yup.boolean(),
@@ -82,13 +82,13 @@ const validationSchema = Yup.object().shape({
       })
       .test(function (value) {
         if (
-          !value.types_of_plans_commercial &&
-          !value.types_of_plans_medicare &&
-          !value.types_of_plans_medicaid
+          !value.types_of_payors_commercial &&
+          !value.types_of_payors_medicare &&
+          !value.types_of_payors_medicaid
         ) {
           return this.createError({
-            message: 'Please select at least one plan type.',
-            path: this.path + '.types_of_plans_hidden',
+            message: 'Please select at least one payor type.',
+            path: this.path + '.types_of_payors_hidden',
           });
         }
         return true;
@@ -139,12 +139,12 @@ const initialValues: RegistrationFormValues = {
       fein: '',
       license_number: '',
       naic_company_code: '',
-      types_of_plans_commercial: false,
-      types_of_plans_medicare: false,
-      types_of_plans_medicaid: false,
-      types_of_plans_hidden: false,
+      types_of_payors_commercial: false,
+      types_of_payors_medicare: false,
+      types_of_payors_medicaid: false,
+      types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment: true,
-      types_of_files_provider: false,
+      types_of_files_provider: true,
       types_of_files_medical: false,
       types_of_files_pharmacy: false,
       types_of_files_dental: false,
@@ -173,9 +173,9 @@ const initialTouched = {
   state: true,
   entities: [
     {
-      types_of_plans_commercial: true,
-      types_of_plans_medicare: true,
-      types_of_plans_medicaid: true,
+      types_of_payors_commercial: true,
+      types_of_payors_medicare: true,
+      types_of_payors_medicaid: true,
       types_of_files_eligibility_enrollment: true,
       types_of_files_provider: true,
       types_of_files_medical: true,
@@ -259,7 +259,7 @@ export const RegistrationForm: React.FC<{
               This form should be completed and submitted to register as a data
               submitter. Please review the
               <a
-                href="https://sph.uth.edu/research/centers/center-for-health-care-data/assets/tx-apcd/data-submission-guides/TXAPCD%20-%20Data%20Submission%20Guide%20(DSG).pdf"
+                href="https://go.uth.edu/DSG"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -268,7 +268,7 @@ export const RegistrationForm: React.FC<{
               </a>
               for details about completing and submitting this form, paying
               special attention to the schedule of submissions including test
-              files, historical files, and monthly files.
+              files and monthly files.
             </p>
 
             <hr />
@@ -475,12 +475,12 @@ export const RegistrationForm: React.FC<{
                           fein: '',
                           license_number: '',
                           naic_company_code: '',
-                          types_of_plans_commercial: false,
-                          types_of_plans_medicare: false,
-                          types_of_plans_medicaid: false,
-                          types_of_plans_hidden: false,
+                          types_of_payors_commercial: false,
+                          types_of_payors_medicare: false,
+                          types_of_payors_medicaid: false,
+                          types_of_payors_hidden: false,
                           types_of_files_eligibility_enrollment: true,
-                          types_of_files_provider: false,
+                          types_of_files_provider: true,
                           types_of_files_medical: false,
                           types_of_files_pharmacy: false,
                           types_of_files_dental: false,

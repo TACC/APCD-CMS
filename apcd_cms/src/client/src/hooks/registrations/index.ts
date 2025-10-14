@@ -18,7 +18,7 @@ export type RegistrationEntity = {
   no_covered: number;
   ent_name: string;
   fein: string | null | undefined;
-  plans_type: StringMap;
+  payors_type: StringMap;
   files_type: StringMap;
 };
 
@@ -85,10 +85,10 @@ export type RegistrationFormValues = {
     fein: string;
     license_number: string;
     naic_company_code: string;
-    types_of_plans_commercial: boolean;
-    types_of_plans_medicare: boolean;
-    types_of_plans_medicaid: boolean;
-    types_of_plans_hidden?: boolean;
+    types_of_payors_commercial: boolean;
+    types_of_payors_medicare: boolean;
+    types_of_payors_medicaid: boolean;
+    types_of_payors_hidden?: boolean;
     types_of_files_eligibility_enrollment: boolean;
     types_of_files_provider: boolean;
     types_of_files_medical: boolean;
@@ -136,10 +136,10 @@ export function transformToRegistrationFormValues(
       fein: entity.fein ?? '',
       license_number: entity.license ?? '',
       naic_company_code: entity.naic ?? '',
-      types_of_plans_commercial: entity.plans_type['Commercial'],
-      types_of_plans_medicare: entity.plans_type['Medicare'],
-      types_of_plans_medicaid: entity.plans_type['Medicaid'],
-      types_of_plans_hidden: false,
+      types_of_payors_commercial: entity.payors_type['Commercial'],
+      types_of_payors_medicare: entity.payors_type['Medicare'],
+      types_of_payors_medicaid: entity.payors_type['Medicaid'],
+      types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment:
         entity.files_type['Eligibility/Enrollment'],
       types_of_files_provider: entity.files_type['Provider'],

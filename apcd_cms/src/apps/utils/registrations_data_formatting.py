@@ -37,7 +37,7 @@ def _set_entities(reg_ent):
         'no_covered': reg_ent[6],
         'ent_name': reg_ent[7],
         'fein': reg_ent[8] if reg_ent[8] else None,
-        'plans_type': {
+        'payors_type': {
             "Commercial": reg_ent[9],
             "Medicare": reg_ent[10],
             "Medicaid": reg_ent[11],
