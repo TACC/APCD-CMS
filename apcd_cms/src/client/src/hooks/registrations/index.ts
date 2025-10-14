@@ -1,6 +1,7 @@
 export type RegFormData = {
   registration_data: RegistrationContent;
   renew: boolean;
+  medicare_date: string;
 };
 
 export { useRegFormData, usePostRegistration } from './useForm';
@@ -18,7 +19,7 @@ export type RegistrationEntity = {
   no_covered: number;
   ent_name: string;
   fein: string | null | undefined;
-  plans_type: StringMap;
+  payors_type: StringMap;
   files_type: StringMap;
 };
 
@@ -33,6 +34,7 @@ export type RegistrationContact = {
 
 export type RegistrationContent = {
   reg_id: number;
+  posted_date: Date;
   biz_name: string;
   type: string | null | undefined;
   city: string;
@@ -80,15 +82,19 @@ export type RegistrationFormValues = {
   zip_code: string;
   reg_id?: number;
   reg_status?: string;
+  posted_date?: Date;
+  medicare_date: string;
   entities: {
     entity_name: string;
     fein: string;
     license_number: string;
     naic_company_code: string;
-    types_of_plans_commercial: boolean;
-    types_of_plans_medicare: boolean;
-    types_of_plans_medicaid: boolean;
-    types_of_plans_hidden?: boolean;
+    types_of_payors_commercial: boolean;
+    types_of_payors_medicare: boolean;
+    types_of_payors_medicare_advantage: boolean;
+    types_of_payors_medicare_supplement: boolean;
+    types_of_payors_medicaid: boolean;
+    types_of_payors_hidden?: boolean;
     types_of_files_eligibility_enrollment: boolean;
     types_of_files_provider: boolean;
     types_of_files_medical: boolean;
@@ -112,7 +118,8 @@ export type RegistrationFormValues = {
 
 export function transformToRegistrationFormValues(
   registration: RegistrationContent,
-  renew?: boolean | undefined
+  medicare_date: string,
+  renew?: boolean | undefined,
 ): RegistrationFormValues {
   const typeValueMap: Record<string, string> = {
     // to set database value for field rather than display value
@@ -131,15 +138,19 @@ export function transformToRegistrationFormValues(
     zip_code: registration.zip.toString(),
     reg_id: registration.reg_id,
     reg_status: registration.status,
+    posted_date: registration.posted_date,
+    medicare_date: medicare_date,
     entities: registration.entities.map((entity) => ({
       entity_name: entity.ent_name,
       fein: entity.fein ?? '',
       license_number: entity.license ?? '',
       naic_company_code: entity.naic ?? '',
-      types_of_plans_commercial: entity.plans_type['Commercial'],
-      types_of_plans_medicare: entity.plans_type['Medicare'],
-      types_of_plans_medicaid: entity.plans_type['Medicaid'],
-      types_of_plans_hidden: false,
+      types_of_payors_commercial: entity.payors_type['Commercial'],
+      types_of_payors_medicare: entity.payors_type['Medicare'],
+      types_of_payors_medicare_advantage: entity.payors_type['Medicare Advantage'],
+      types_of_payors_medicare_supplement: entity.payors_type['Medicare Supplement'],
+      types_of_payors_medicaid: entity.payors_type['Medicaid'],
+      types_of_payors_hidden: false,
       types_of_files_eligibility_enrollment:
         entity.files_type['Eligibility/Enrollment'],
       types_of_files_provider: entity.files_type['Provider'],

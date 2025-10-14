@@ -37,17 +37,19 @@ def _set_entities(reg_ent):
         'no_covered': reg_ent[6],
         'ent_name': reg_ent[7],
         'fein': reg_ent[8] if reg_ent[8] else None,
-        'plans_type': {
+        'payors_type': {
             "Commercial": reg_ent[9],
             "Medicare": reg_ent[10],
-            "Medicaid": reg_ent[11],
+            "Medicare Advantage": reg_ent[11],
+            "Medicare Supplement": reg_ent[12],
+            "Medicaid": reg_ent[13],
         },
         'files_type': {
-            "Eligibility/Enrollment": reg_ent[12],
-            "Provider": reg_ent[13],
-            "Medical": reg_ent[14],
-            "Pharmacy": reg_ent[15],
-            "Dental": reg_ent[16]
+            "Eligibility/Enrollment": reg_ent[14],
+            "Provider": reg_ent[15],
+            "Medical": reg_ent[16],
+            "Pharmacy": reg_ent[17],
+            "Dental": reg_ent[18]
         }
     }
 
@@ -83,6 +85,7 @@ def _set_registration(reg, reg_ent, reg_cont):
     org_types = _get_orgtypes()
     return {
         'reg_id': reg[0],
+        'posted_date': reg[1],
         'biz_name': reg[5],
         'type': org_types[reg[4]] if (reg[4] and reg[4] in org_types.keys()) else None,
         'city': reg[7],

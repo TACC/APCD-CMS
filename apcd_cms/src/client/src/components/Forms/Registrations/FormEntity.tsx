@@ -5,7 +5,17 @@ import { TextFormField } from './TextFormField';
 import styles from './RegistrationForm.module.css';
 import FieldWrapper from 'core-wrappers/FieldWrapperFormik';
 
-export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
+const getPayorTypes = (posted_date: Date | null, medicare_date: string) => {
+  // new medicare fields introduced to form Oct 2025; we retain the previously used 'Medicare' field for
+  // records created prior to these new fields being deployed
+  const medicare_deploy_date = new Date(medicare_date);
+  if (posted_date && new Date(posted_date) < medicare_deploy_date) {
+    return ['Commercial', 'Medicare', 'Medicaid'];
+  }
+  return ['Commercial', 'Medicare_Advantage', 'Medicare_Supplement', 'Medicaid'];
+}
+
+export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | null, isEdit: boolean, medicare_date: string }> = ({ index, posted_date, isEdit, medicare_date }) => {
   return (
     <div>
       <h5 className={`${styles.boldedHeader} ${styles.spacedHeader}`}>
@@ -45,37 +55,37 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
         </FormGroup>
       </FieldWrapper>
 
-      <h6 className={styles.boldedHeader}>Type of Plan</h6>
+      <h6 className={styles.boldedHeader}>Type of Payor</h6>
       <FieldWrapper
-        name={`entities.${index}.types_of_plans_hidden`}
-        label="Plan Types"
+        name={`entities.${index}.types_of_payors_hidden`}
+        label="Payor Types"
         required={true}
       >
         <div
-          id={`entities.${index}.types_of_plans_hidden`}
+          id={`entities.${index}.types_of_payors_hidden`}
           style={{ display: 'none' }}
         />
         <FormGroup
           className="checkboxselectmultiple"
-          id={`entities.${index}.types_of_plans`}
+          id={`entities.${index}.types_of_payors`}
         >
-          {['Commercial', 'Medicare', 'Medicaid'].map((planType) => (
+          {getPayorTypes(posted_date, medicare_date).map((payorType) => (
             <FormGroup
-              key={`entities.${index}.types_of_plans_${planType.toLowerCase()}.wrapper`}
+              key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.wrapper`}
               noMargin={true}
             >
               <Label
-                htmlFor={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
-                key={`entities.${index}.types_of_plans_${planType.toLowerCase()}.label`}
+                htmlFor={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
+                key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.label`}
               >
                 <Field
                   type="checkbox"
-                  key={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
-                  name={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
-                  id={`entities.${index}.types_of_plans_${planType.toLowerCase()}`}
+                  key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
+                  name={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
+                  id={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
                 ></Field>
-                {planType}
-                {planType == 'Medicaid' ? (
+                {payorType.replace('_',' ')}
+                {payorType == 'Medicaid' ? (
                   <small>(for state use only)</small>
                 ) : (
                   <></>
@@ -91,7 +101,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
         name={`entities.${index}.types_of_files_hidden`}
         label="Types of Files"
         required={true}
-        description="Eligibility/Enrollment files are mandatory. At least one claims file type (Medical, Pharmacy, and Dental) must be selected."
+        description="Eligibility/Enrollment and Provider files are mandatory. At least one claims file type (Medical, Pharmacy, and Dental) must be selected."
       >
         <FormGroup
           className="checkboxselectmultiple"
@@ -129,7 +139,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
                   id={`entities.${index}.types_of_files_${fileType
                     .toLowerCase()
                     .replace('/', '_')}`}
-                  disabled={fileType == 'Eligibility/Enrollment' ? true : false}
+                  disabled={fileType == 'Eligibility/Enrollment' || fileType == 'Provider' ? true : false}
                 ></Field>
                 {fileType}
               </Label>

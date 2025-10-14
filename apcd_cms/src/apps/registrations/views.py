@@ -18,6 +18,7 @@ RT_HOST = getattr(settings, 'RT_HOST', '')
 RT_UN = getattr(settings, 'RT_UN', '')
 RT_PW = getattr(settings, 'RT_PW', '')
 RT_QUEUE = getattr(settings, 'RT_QUEUE', '')
+MEDICARE_UPDATE_DEPLOY_DATE = getattr(settings, 'MEDICARE_UPDATE_DEPLOY_DATE', '')
 
 
 class RegistrationFormTemplate(AuthenticatedUserTemplateMixin, TemplateView):
@@ -42,7 +43,7 @@ class RegistrationFormApi(AuthenticatedUserAPIMixin, BaseAPIView):
             formatted_reg_data = _set_registration(registration_content, registration_entities, registration_contacts)
 
         if (request.user.is_authenticated and has_apcd_group(request.user)):
-            context = {'registration_data': formatted_reg_data, 'renew': renew}
+            context = {'registration_data': formatted_reg_data, 'renew': renew, 'medicare_date': MEDICARE_UPDATE_DEPLOY_DATE}
             return JsonResponse({'response': context})
         else: 
             return JsonResponse({'error': 'Unauthorized'}, status=403)
@@ -63,6 +64,9 @@ class RegistrationFormApi(AuthenticatedUserAPIMixin, BaseAPIView):
         reg_resp = create_registration(form, renewal=renewal)
         if not _err_msg(reg_resp) and type(reg_resp) == int:
             for entity in entities:
+                if entity['types_of_payors_medicare'] and renewal:
+                # old medicare field and new medicare fields are now mutually exclusive as of Oct 2025, need to force old medicare field to false on renewals
+                    entity['types_of_payors_medicare'] = False
                 entity_resp = create_registration_entity(entity, reg_resp)
                 if entity_resp: # only returns a value if error occurs
                     errors.append(str(entity_resp))

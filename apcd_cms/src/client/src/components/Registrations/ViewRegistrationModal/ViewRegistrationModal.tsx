@@ -26,7 +26,7 @@ const ViewRegistrationModal: React.FC<{
     status,
     entities,
     contacts,
-  } = data;
+  } = data['registration_data'];
 
   const closeBtn = (
     <button className="close" onClick={onClose} type="button">
@@ -91,18 +91,18 @@ const ViewRegistrationModal: React.FC<{
                 <dd className={styles.verticalDataValue}>
                   {entity.naic ? entity.naic : 'None'}
                 </dd>
-                <h6>Type of Plan</h6>
+                <h6>Type of Payor</h6>
                 <dd>
-                  <dl className="c-data-list--is-vert c-data-list--is-wide">
-                    <dt className="c-data-list__key">Types of Plans</dt>
-                    {Object.entries(entity.plans_type).map(
-                      ([plan_type, selected]) =>
+                  <dl className={styles.verticalDataList}>
+                    <dt className="c-data-list__key">Payor Types</dt>
+                    {Object.entries(entity.payors_type).map(
+                      ([payor_type, selected]) =>
                         selected && (
                           <dd
-                            key={plan_type}
+                            key={payor_type}
                             className={styles.verticalDataValue}
                           >
-                            {plan_type}
+                            {payor_type}
                           </dd>
                         )
                     )}
