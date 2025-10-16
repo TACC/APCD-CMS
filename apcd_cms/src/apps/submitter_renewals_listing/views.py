@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from apps.utils.apcd_database import get_registrations, get_registration_contacts, get_registration_entities
+from apps.utils.apcd_database import get_registrations, get_registration_contacts, get_registration_entities, get_user_delinquent
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from apps.admin_regis_table.utils import get_registration_list_json
@@ -44,6 +44,17 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
             return JsonResponse({'response': context})
         else:
             registration_list = get_registrations(submitter_codes=submitter_codes)
+        # TODO this is only demonstrating the function working, needs to be intengrated into the app somehow!
+            is_delinquent = get_user_delinquent(request.user.username)
+            print("Is User " + request.user.username + " registration delinquent: " + str(is_delinquent))
+            # Build banner for frontend
+            banner = None
+            if is_delinquent:
+                banner = {
+                    "level": "warning",
+                    "code": "DELINQUENT",
+                    "text": "Your registration is delinquent. Please renew."
+                }
             for registration in registration_list:
                 registrations_content.append(registration)
             try:
