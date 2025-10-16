@@ -44,9 +44,17 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
             return JsonResponse({'response': context})
         else:
             registration_list = get_registrations(submitter_codes=submitter_codes)
-            # TODO this is only demonstrating the function working, needs to be intengrated into the app somehow!
+        # TODO this is only demonstrating the function working, needs to be intengrated into the app somehow!
             is_delinquent = get_user_delinquent(request.user.username)
             print("Is User " + request.user.username + " registration delinquent: " + str(is_delinquent))
+            # Build banner for frontend
+            banner = None
+            if is_delinquent:
+                banner = {
+                    "level": "warning",
+                    "code": "DELINQUENT",
+                    "text": "Your registration is delinquent. Please renew."
+                }
             for registration in registration_list:
                 registrations_content.append(registration)
             try:
