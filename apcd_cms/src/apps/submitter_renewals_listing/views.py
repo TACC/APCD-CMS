@@ -65,5 +65,6 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
                                                        request.GET.get('org'), page_num, *args, **kwargs)
             response_json['header'] = ['Business Name', 'Year', 'Created', 'Registration Status', 'Actions']
             response_json['pagination_url_namespaces'] = 'register:submitter_regis_table'
+            response_json['banner'] = banner
             return JsonResponse({'response': response_json})
 
