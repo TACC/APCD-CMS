@@ -53,7 +53,7 @@ class SubmittersApi(APCDSubmitterAdminAccessAPIMixin, BaseAPIView):
                 banner = {
                     "level": "warning",
                     "code": "DELINQUENT",
-                    "text": "Your registration is delinquent. Please renew."
+                    "text": "Your organization’s registration renewal is past due. Registration renewal is required annually. Please renew."
                 }
             for registration in registration_list:
                 registrations_content.append(registration)
