@@ -16,6 +16,7 @@ https://txapcd.org/
     ```
 2. Configure the project:
     - Create a `/cms/src/taccsite_cms/secrets.py` with content from ["Stache" secret `APCD DEV CMS`](https://stache.utexas.edu/entry/c6a600467c02fcf0c902c229bd145118).
+    - NOTE: APCD_DATABASE.database should be 'pipeline2' for local development
 3. Start the CMS website:\
     <sup>This command will also first build the CMS as needed.</sup>
     ```sh
