@@ -1471,6 +1471,44 @@ def update_exception(form):
         if conn is not None:
             conn.close()
 
+def get_user_delinquent(user_id):
+    cur = None
+    conn = None
+    try:
+        with db_connect() as conn:
+            cur = conn.cursor()
+            cur = conn.cursor()
+
+            current_year = datetime.now().year
+            #query = """
+            #select max(date_part('year',registration_submitters.created_at)) from registration_submitters
+            #left join submitter_users on submitter_users.submitter_id = registration_submitters.submitter_id
+            #where user_id = %s
+            #"""
+            query = """
+            select max(registrations.registration_year) from registrations
+            left join registration_submitters on registration_submitters.registration_id = registrations.registration_id 
+            left join submitter_users on submitter_users.submitter_id = registration_submitters.submitter_id
+            where user_id = %s
+            """
+            cur.execute(query, (user_id,))
+            reg_year = cur.fetchone()
+            if reg_year[0] != None and reg_year[0] < current_year:
+                return True
+            elif reg_year[0] == None:
+                # if the reg year is empty in production this is a case of bad data and shouldn't happen, but covering our bases
+                return True
+            else:
+                return False
+
+    except Exception as error:
+        logger.error(error)
+
+    finally:
+        if cur is not None:
+            cur.close()
+        if conn is not None:
+            conn.close()
 def _acceptable_entity(form, iteration, reg_id=None):
     str_end = f'{iteration}{ f"_{reg_id}" if reg_id else "" }'
     required_keys = [
