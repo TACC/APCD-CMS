@@ -10,6 +10,7 @@ from datetime import datetime
 from apps.utils.utils import table_filter
 from apps.utils.utils import title_case
 from apps.components.paginator.paginator import paginator
+from apps.utils import testing_api_connection
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +25,12 @@ class ExtensionFormApi(APCDGroupAccessAPIMixin, BaseAPIView):
 
     def get(self, request):
         if (request.user.is_authenticated and has_apcd_group(request.user)):
+            print("Testing API connection")
+            test_out = testing_api_connection.main()
+            print(test_out)
             formatted_extension_data = []
             submitter_codes = []
-            # submitter_id = request.GET.get('s_id', None)
+            #submitter_id = request.GET.get('s_id', None)
             submitters = apcd_database.get_submitter_info(request.user.username)
             submitter_codes = []
 
