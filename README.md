@@ -15,7 +15,7 @@ https://txapcd.org/
     cd to acpd_cms
     ```
 2. Configure the project:
-    - secrets.py, settings_custom.py, and settings_local on apcd_cms/src/taccsite_cms will be empty directories after cloning the repo. Please delete these directories.
+    - `secrets.py`, `settings_custom.py`, and `settings_local.py` on `apcd_cms/src/taccsite_cms/` will be empty directories after cloning the repo. Please delete these directories.
     - Create a `/apcd_cms/src/taccsite_cms/secrets.py` file with content from ["Stache" secret `APCD DEV CMS`](https://stache.utexas.edu/entry/c6a600467c02fcf0c902c229bd145118).NOTE: APCD_DATABASE.database should be 'pipeline2' for local development
     - Create a `/apcd_cms/src/taccsite_cms/settings_custom.py` file with the following code:
       ```sh
