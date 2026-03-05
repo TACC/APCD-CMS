@@ -5,7 +5,17 @@ import { TextFormField } from './TextFormField';
 import styles from './RegistrationForm.module.css';
 import FieldWrapper from 'core-wrappers/FieldWrapperFormik';
 
-export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
+const getPayorTypes = (posted_date: Date | null, medicare_date: string) => {
+  // new medicare fields introduced to form Oct 2025; we retain the previously used 'Medicare' field for
+  // records created prior to these new fields being deployed
+  const medicare_deploy_date = new Date(medicare_date);
+  if (posted_date && new Date(posted_date) < medicare_deploy_date) {
+    return ['Commercial', 'Medicare', 'Medicaid'];
+  }
+  return ['Commercial', 'Medicare_Advantage', 'Medicare_Supplement', 'Medicaid'];
+}
+
+export const RegistrationEntity: React.FC<{ index: number, posted_date: Date | null, isEdit: boolean, medicare_date: string }> = ({ index, posted_date, isEdit, medicare_date }) => {
   return (
     <div>
       <h5 className={`${styles.boldedHeader} ${styles.spacedHeader}`}>
@@ -59,7 +69,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
           className="checkboxselectmultiple"
           id={`entities.${index}.types_of_payors`}
         >
-          {['Commercial', 'Medicare', 'Medicaid'].map((payorType) => (
+          {getPayorTypes(posted_date, medicare_date).map((payorType) => (
             <FormGroup
               key={`entities.${index}.types_of_payors_${payorType.toLowerCase()}.wrapper`}
               noMargin={true}
@@ -74,7 +84,7 @@ export const RegistrationEntity: React.FC<{ index: number }> = ({ index }) => {
                   name={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
                   id={`entities.${index}.types_of_payors_${payorType.toLowerCase()}`}
                 ></Field>
-                {payorType}
+                {payorType.replace('_',' ')}
                 {payorType == 'Medicaid' ? (
                   <small>(for state use only)</small>
                 ) : (

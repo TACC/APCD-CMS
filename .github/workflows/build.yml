@@ -2,7 +2,7 @@ name: APCD CMS Builds
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, any/branch-you-want, feat/update-cms]
 
 jobs:
   build_commit:

@@ -15,7 +15,46 @@ https://txapcd.org/
     cd to acpd_cms
     ```
 2. Configure the project:
-    - Create a `/cms/src/taccsite_cms/secrets.py` with content from ["Stache" secret `APCD DEV CMS`](https://stache.utexas.edu/entry/c6a600467c02fcf0c902c229bd145118).
+    - secrets.py, settings_custom.py, and settings_local on apcd_cms/src/taccsite_cms will be empty directories after cloning the repo. Please delete these directories.
+    - Create a `/apcd_cms/src/taccsite_cms/secrets.py` file with content from ["Stache" secret `APCD DEV CMS`](https://stache.utexas.edu/entry/c6a600467c02fcf0c902c229bd145118).NOTE: APCD_DATABASE.database should be 'pipeline2' for local development
+    - Create a `/apcd_cms/src/taccsite_cms/settings_custom.py` file with the following code:
+      ```sh
+      # CUSTOM SETTINGS VALUES.
+      # TACC WMA CMS SITE:
+      # *.APCD.TACC.UTEXAS.EDU
+      ########################
+      # TACC: LOGO & FAVICON
+      ########################
+      LOGO = [
+	      "tacc",
+	      "apcd_cms/img/org_logos/apcd-white.png",
+	      "",
+	      "/",
+	      "_self",
+	      "APCD: All-Payer Claims Database",
+	      "anonymous",
+	      "True"
+      ]
+
+      PORTAL_FAVICON = {
+	      "is_remote": False,
+	      "img_file_src": "apcd_cms/img/favicons/favicon.ico",
+      }
+      ```
+    - Create a `/apcd_cms/src/taccsite_cms/settings_local.py` file with the following code:
+      ```sh
+      '''
+      A `settings_local.py` file can override default values in `settings.py` and `settings_custom.py`.
+      For a detailed walkthrough on overriding settings, see `settings_custom.example.py`:
+      https://github.com/TACC/Core-CMS/blob/main/taccsite_cms/settings_custom.example.py
+      '''
+      # Hide error about using Google Recaptcha test keys
+      SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+      # Disable the Core-Portal integration.
+      INCLUDES_CORE_PORTAL = False
+      INCLUDES_PORTAL_NAV = False
+      ```
+
 3. Start the CMS website:\
     <sup>This command will also first build the CMS as needed.</sup>
     ```sh

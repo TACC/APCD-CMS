@@ -20,7 +20,7 @@ const EditRegistrationModal: React.FC<{
   if (!data) return <div>No data Found.</div>;
 
   const form_values: RegistrationFormValues =
-    transformToRegistrationFormValues(data);
+    transformToRegistrationFormValues(data['registration_data'], data['medicare_date']);
 
   const closeBtn = (
     <button className="close" onClick={onClose} type="button">

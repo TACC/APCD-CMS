@@ -6,10 +6,40 @@ import ViewRegistrationModal from 'apcd-components/Registrations/ViewRegistratio
 import EditRegistrationModal from 'apcd-components/Registrations/EditRegistrationModal/EditRegistrationModal';
 import styles from './RegistrationList.module.css';
 import { ClearOptionsButton } from 'apcd-components/ClearOptionsButton';
+import { formatDate } from 'utils/dateUtil';
 import {
   useAdminRegistration,
   useSubmitterRegistration,
 } from 'hooks/registrations';
+/** Banner types and helpers **/
+type BannerLevel = 'info' | 'success' | 'warning' | 'danger';
+type Banner = { level?: BannerLevel; text: string; code?: string };
+
+const bannerClass = (level?: BannerLevel) => {
+  switch (level) {
+    case 'success':
+      return 'c-message c-message--success';
+    case 'warning':
+      return 'c-message c-message--warning';
+    case 'danger':
+      return 'c-message c-message--error';
+    default:
+      return 'c-message c-message--info';
+  }
+};
+
+const MessageBanner: React.FC<{ banner?: Banner | null }> = ({ banner }) => {
+  if (!banner?.text) return null;
+  return (
+    <div
+      className={bannerClass(banner.level)}
+      role="alert"
+      style={{ marginBottom: 12, fontSize: '1.1em', border: '2px solid rgb(205, 151, 28)', padding: '10px', backgroundColor: 'rgb(253, 240, 211)'}}
+    >
+      {banner.text}
+    </div>
+  );
+};
 
 export const RegistrationList: React.FC<{
   useDataHook: any;
@@ -86,6 +116,8 @@ export const RegistrationList: React.FC<{
 
   return (
     <div>
+      {/* Show server-provided delinquency banner if present */}
+    <MessageBanner banner={data?.banner as Banner | undefined} />
       <div className="filter-container">
         <div className="filter-content">
           {/* Filter */}
@@ -141,7 +173,7 @@ export const RegistrationList: React.FC<{
                 <td>{row.year ? row.year : 'None'}</td>
                 <td>
                   {row.posted_date
-                    ? new Date(row.posted_date).toLocaleString()
+                    ? formatDate(row.posted_date)
                     : '—'}
                 </td>
                 <td>{row.reg_status ? row.reg_status : 'None'}</td>
