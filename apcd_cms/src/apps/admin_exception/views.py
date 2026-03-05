@@ -4,6 +4,7 @@ from apps.utils.apcd_database import get_all_exceptions, update_exception
 from apps.utils.utils import title_case, table_filter
 from apps.components.paginator.paginator import paginator
 from dateutil import parser
+from apps.utils import apcd_api
 from apps.base.base import BaseAPIView, APCDAdminAccessAPIMixin, APCDAdminAccessTemplateMixin
 import logging
 import json
@@ -18,9 +19,11 @@ class AdminExceptionsTable(APCDAdminAccessTemplateMixin, TemplateView):
 class AdminExceptionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
 
     def get(self, *args, **kwargs):
-        exception_content = get_all_exceptions()
+        key = apcd_api.login('test_apcd_admin')
+        exceptions = apcd_api.sub_exc(key) # will be (request.user.apcd_api_key) or something like that
 
-        context = self.get_exception_list_json(exception_content, *args, **kwargs)
+
+        context = self.get_exception_list_json(exceptions)
         return JsonResponse({'response': context})
 
     def get_exception_list_json(self, exception_content, *args, **kwargs):
@@ -44,71 +47,28 @@ class AdminExceptionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
         org_filter = self.request.GET.get('org')
         def _set_exception(exception): 
             return {
-                'exception_id': exception[0],
-                'submitter_id': exception[1],
-                'requestor_name': exception[2],
-                'request_type': title_case(exception[3]) if exception[3] else None, # to make sure if val doesn't exist, utils don't break page
-                'explanation_justification': exception[4],
-                'outcome': title_case(exception[5]) if exception[5] else 'None',
-                'outcome': title_case(exception[5]) if exception[5] else 'None',
-                'created_at': exception[6],
-                'updated_at': exception[7],
-                'submitter_code': exception[8],
-                'payor_code': exception[9],
-                'user_id': exception[10],
-                'requestor_email': exception[11],
-                'data_file': exception[12],
-                'field_number': exception[13],
-                'required_threshold': exception[14],
-                'requested_threshold': exception[15],
-                'requested_expiration_date': exception[16],
-                'approved_threshold': exception[17],
-                'approved_expiration_date': exception[18],
-                'status': title_case(exception[19]) if exception[19] else 'None',
-                'notes': exception[20],
-                'entity_name': exception[21],
-                'data_file_name': exception[22],
-                'view_modal_content': {
-                    'exception_id': exception[0],
-                    'created_at':  exception[6],
-                    'requestor_name': exception[2],
-                    'requestor_email': exception[11],
-                    'request_type': title_case(exception[3]) if exception[3] else None,
-                    'status': title_case(exception[19]) if exception[3] else None,
-                    'outcome': title_case(exception[5]) if exception[3] else None,
-                    'data_file_name': exception[22],
-                    'field_number': exception[13],
-                    'required_threshold': exception[14],
-                    'requested_threshold': exception[15],
-                    'approved_threshold': exception[17],
-                    'requested_expiration_date': exception[16],
-                    'approved_expiration_date': exception[18],
-                    'explanation_justification': exception[4],
-                    'notes': exception[20],
-                    'entity_name': exception[21],
-                    'payor_code': exception[9],
-                    'updated_at': exception[7],
-                }
+                **exception,
+                'view_modal_content': exception
             }
         def getDate(row):
             date = row[6]
             return date if date is not None else parser.parse('1-1-0001')
 
         # sort exceptions by newest to oldest
-        exception_content = sorted(exception_content, key=lambda row:getDate(row), reverse=True) 
+        #exception_content = sorted(exception_content, key=lambda row:getDate(row), reverse=True) 
 
         limit = 50
         offset = limit * (page_num - 1)
 
         exception_table_entries = []       
-        for exception in exception_content:
+        for exception in exception_content['records']:
             # to be used by paginator
             exception_table_entries.append(_set_exception(exception))
             # to be able to access any exception in a template using exceptions var in the future
             context['exceptions'].append(_set_exception(exception))
-            entity_name = title_case(exception[21])
-            status = title_case(exception[19]) if exception[19] else 'None'
-            outcome = title_case(exception[5]) if exception[5] else 'None'
+            entity_name = title_case(exception["entity_name"])
+            status = title_case(exception["status"]) if exception["status"] else 'None'
+            outcome = title_case(exception["outcome"]) if exception["outcome"] else 'None'
             if entity_name not in context['org_options']:
                 context['org_options'].append(entity_name)
                 # to make sure All is first in the dropdown filter options after sorting alphabetically
@@ -134,16 +94,11 @@ class AdminExceptionsApi(APCDAdminAccessAPIMixin, BaseAPIView):
             exception_table_entries = table_filter(org_filter.replace("(", "").replace(")",""), exception_table_entries, 'entity_name')
 
         context['query_str'] = queryStr
-        page_info = paginator(page_num, exception_table_entries, limit)
-        context['page'] = [{'entity_name': obj['entity_name'], 'payor_code': obj['payor_code'], 'created_at': obj['created_at'], 'request_type': obj['request_type'], 
-                            'requestor_name': obj['requestor_name'], 'outcome': obj['outcome'], 'status': obj['status'], 
-                            'approved_threshold': obj['approved_threshold'],'approved_expiration_date': obj['approved_expiration_date'], 
-                            'notes': obj['notes'], 'exception_id': obj['exception_id'], 'view_modal_content': obj['view_modal_content'],
-                            'requested_threshold': obj['requested_threshold'],} 
-                            for obj in page_info['page']]
+        #page_info = paginator(page_num, exception_table_entries, limit)
+        context['page'] = exception_table_entries
 
-        context['page_num'] = page_num
-        context['total_pages'] = page_info['page'].paginator.num_pages
+        context['page_num'] = exception_content['current_page']
+        context['total_pages'] = exception_content['total_pages']
 
         context['pagination_url_namespaces'] = 'admin_exception:list-exceptions'
 
