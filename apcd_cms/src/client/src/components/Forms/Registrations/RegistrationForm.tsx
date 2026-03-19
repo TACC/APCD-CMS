@@ -453,7 +453,6 @@ export const RegistrationForm: React.FC<{
                     (If single company, enter the same organization as above.)
                   </small>
                 </h4>
-                {console.log(values)}
                 {values.entities.map((entity, index) => (
                   <RegistrationEntity 
                     key={index}
