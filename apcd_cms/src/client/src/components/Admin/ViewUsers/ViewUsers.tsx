@@ -4,7 +4,7 @@ import ViewRecordModal from './ViewRecordModal';
 import EditRecordModal from './EditRecordModal';
 import LoadingSpinner from 'core-components/LoadingSpinner';
 import Paginator from 'core-components/Paginator';
-import styles from './ViewUsers.module.scss';
+import styles from './ViewUsers.module.css';
 import { ClearOptionsButton } from 'apcd-components/ClearOptionsButton';
 
 export const ViewUsers: React.FC = () => {
