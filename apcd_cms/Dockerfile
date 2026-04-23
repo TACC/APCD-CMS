@@ -9,7 +9,8 @@ COPY /src/taccsite_cms /code/taccsite_cms
 
 # install node 20.x
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs python3
+RUN pip3 install httpx hvac
 
 RUN chmod u+x /code/client/build_client.sh && /code/client/build_client.sh
 RUN cp -R /code/client/dist/static/assets/. /code/taccsite_custom/apcd_cms/static/assets/
