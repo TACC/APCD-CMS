@@ -12,7 +12,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { fetchUtil } from 'utils/fetchUtil';
 import * as Yup from 'yup';
 import { UserRow } from 'hooks/admin';
-import styles from './ViewUsers.module.scss';
+import styles from './ViewUsers.module.css';
 import { formatDate } from 'utils/dateUtil';
 import QueryWrapper from 'core-wrappers/QueryWrapper';
 import FieldWrapper from 'core-wrappers/FieldWrapperFormik';

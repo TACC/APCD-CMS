@@ -14,7 +14,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { fetchUtil } from 'utils/fetchUtil';
 import * as Yup from 'yup';
 import { SubmitterUserRow } from 'hooks/admin';
-import styles from './ViewSubmitterUsers.module.scss';
+import styles from './ViewSubmitterUsers.module.css';
 
 interface EditRecordModalProps {
   isOpen: boolean;
