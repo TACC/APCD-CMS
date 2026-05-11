@@ -35,7 +35,7 @@ export async function fetchUtil({
     method,
     credentials: 'same-origin',
     headers: {
-      'X-CSRFToken': Cookies.get('csrftoken') || '',
+      'X-CSRFToken': Cookies.get('cmscsrfcookie') || '',
       'Content-Type': 'application/json',
       ...headers,
     },
