@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, ModalHeader, Row, Col, ModalBody } from 'reactstrap';
 import { SubmitterUserRow } from 'hooks/admin';
-import styles from './ViewSubmitterUsers.module.scss';
+import styles from './ViewSubmitterUsers.module.css';
 // import { formatDate } from 'utils/dateUtil';
 
 interface UserDetailsModalProps {
