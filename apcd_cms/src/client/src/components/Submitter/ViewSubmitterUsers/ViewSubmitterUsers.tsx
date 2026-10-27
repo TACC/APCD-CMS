@@ -8,7 +8,7 @@ import ViewRecordModal from './ViewRecordModal';
 import EditRecordModal from './EditRecordModal';
 import LoadingSpinner from 'core-components/LoadingSpinner';
 import Paginator from 'core-components/Paginator';
-import styles from './ViewSubmitterUsers.module.scss';
+import styles from './ViewSubmitterUsers.module.css';
 import { ClearOptionsButton } from 'apcd-components/ClearOptionsButton';
 
 export const ViewSubmitterUsers: React.FC = () => {
