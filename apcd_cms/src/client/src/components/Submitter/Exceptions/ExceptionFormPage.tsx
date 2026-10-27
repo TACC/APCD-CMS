@@ -73,7 +73,7 @@ export const ExceptionFormPage: React.FC = () => {
       }),
       requested_threshold: Yup.number().when('$exceptionType', {
         is: 'threshold',
-        then: (schema) => schema.required('Requested threshold is required'),
+        then: (schema) => schema.required('Requested threshold is required').integer('Requested threshold must be an integer value'),
         otherwise: (schema) => schema.notRequired(),
       }),
       required_threshold: Yup.number().when('$exceptionType', {
