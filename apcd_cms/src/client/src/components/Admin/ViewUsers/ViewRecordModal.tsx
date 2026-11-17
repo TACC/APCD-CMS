@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, ModalHeader, Row, Col, ModalBody } from 'reactstrap';
 import { UserRow } from 'hooks/admin';
-import styles from './ViewUsers.module.scss';
+import styles from './ViewUsers.module.css';
 import { formatDate } from 'utils/dateUtil';
 
 interface UserDetailsModalProps {

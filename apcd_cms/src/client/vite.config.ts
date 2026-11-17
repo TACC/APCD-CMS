@@ -5,7 +5,6 @@ import path, {resolve} from 'path';
 
 
 export default defineConfig({
-    css: { preprocessorOptions: { scss: { charset: false } } },
     build: {
       outDir: 'dist',
       rollupOptions: {
