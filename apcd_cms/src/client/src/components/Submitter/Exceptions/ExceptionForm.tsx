@@ -190,7 +190,7 @@ export const ExceptionForm: React.FC<{
                 (selectedCDL.threshold_value != 0 ? (
                   <>
                     Must be less than the {selectedCDL.threshold_value}{' '}
-                    required.
+                    required. Must be an integer value.
                   </>
                 ) : (
                   <>
